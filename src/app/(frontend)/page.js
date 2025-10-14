@@ -21,7 +21,7 @@ export default function Home() {
             .
           </li>
           <li className="tracking-[-.01em]">
-            Save and see your chanaaaages TESS.
+            Save and see your test TESS.
           </li>
         </ol>
 
