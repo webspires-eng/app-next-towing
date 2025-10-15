@@ -7,6 +7,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
+/**
+ * ---- Enums ----
+ */
 enum Role {
   ADMIN
   USER
@@ -17,6 +20,9 @@ enum LocationType {
   MOTORWAY
 }
 
+/**
+ * ---- Models ----
+ */
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -66,7 +72,7 @@ model Post {
   title     String
   slug      String   @unique
   content   String   @default("")
-  status    String   @default("draft") // draft | published
+  status    String   @default("draft")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
