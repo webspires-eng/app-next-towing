@@ -4,8 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+// Add Services + Areas. matchPrefix=true means highlight on nested routes.
 const NAV = [
   { name: "Home", href: "/" },
+  { name: "Services", href: "/services", matchPrefix: true },
+  { name: "Areas", href: "/areas", matchPrefix: true },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Dashboard", href: "/dashboard" },
@@ -16,7 +19,6 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // add shadow when scrolling
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -25,6 +27,10 @@ export default function Header() {
   }, []);
 
   const closeMenu = () => setOpen(false);
+
+  // Active helper: exact match, or prefix match for sections like /services/*
+  const isActive = (href, matchPrefix) =>
+    matchPrefix ? pathname.startsWith(href) : pathname === href;
 
   return (
     <>
@@ -41,7 +47,7 @@ export default function Header() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`nav-link ${pathname === l.href ? "active" : ""}`}
+                className={`nav-link ${isActive(l.href, l.matchPrefix) ? "active" : ""}`}
               >
                 {l.name}
               </Link>
@@ -51,7 +57,7 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Burger button (mobile) */}
+          {/* Burger (mobile) */}
           <button
             className="burger"
             aria-label="Open menu"
@@ -78,7 +84,7 @@ export default function Header() {
             <Link
               key={l.href}
               href={l.href}
-              className={`mobile-link ${pathname === l.href ? "active" : ""}`}
+              className={`mobile-link ${isActive(l.href, l.matchPrefix) ? "active" : ""}`}
               onClick={closeMenu}
             >
               {l.name}

@@ -1,23 +1,43 @@
+// app/[service]/[location]/page.js
 import Link from "next/link";
-import { SERVICES, LOCATIONS, displayLocation } from "@/data/locations";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 
-// ---------- Static generation ----------
+export const revalidate = 60; // ISR: refresh every 60s
+
+// ---------- Pre-render only pages that exist in DB ----------
 export async function generateStaticParams() {
-  const params = [];
-  for (const s of SERVICES) {
-    for (const l of LOCATIONS) {
-      params.push({ service: s.slug, location: l.slug });
-    }
-  }
-  return params;
+  const rows = await prisma.page.findMany({
+    include: {
+      service: { select: { slug: true } },
+      location: { select: { slug: true } },
+    },
+    where: { published: true },
+  });
+
+  return rows.map((r) => ({
+    service: r.service.slug,
+    location: r.location.slug,
+  }));
 }
 
 // ---------- SEO / Metadata ----------
 export async function generateMetadata({ params }) {
-  const service = SERVICES.find(s => s.slug === params.service);
-  const location = LOCATIONS.find(l => l.slug === params.location);
-  const sLabel = service?.label || "Service";
-  const lLabel = displayLocation(location || { label: params.location.toUpperCase() });
+  const page = await prisma.page.findFirst({
+    where: {
+      published: true,
+      service: { slug: params.service },
+      location: { slug: params.location },
+    },
+    include: { service: true, location: true },
+  });
+
+  if (!page) {
+    return { title: "Not found" };
+  }
+
+  const sLabel = page.service.name;
+  const lLabel = page.location.name;
 
   const title = `${sLabel} ${lLabel} | 24/7 Rapid Response • Next Towing`;
   const description = `Need ${sLabel.toLowerCase()} in ${lLabel}? 24/7 dispatch, fast ETAs, fixed pricing, insured drivers. Call now for immediate help.`;
@@ -32,14 +52,20 @@ export async function generateMetadata({ params }) {
 }
 
 // ---------- Page ----------
-export default function LocationPage({ params }) {
-  const service = SERVICES.find(s => s.slug === params.service);
-  const location = LOCATIONS.find(l => l.slug === params.location);
+export default async function LocationPage({ params }) {
+  const page = await prisma.page.findFirst({
+    where: {
+      published: true,
+      service: { slug: params.service },
+      location: { slug: params.location },
+    },
+    include: { service: true, location: true },
+  });
 
-  if (!service || !location) return <div className="container-1300" style={{padding:"40px 0"}}>Not found</div>;
+  if (!page) notFound();
 
-  const sLabel = service.label;
-  const lLabel = displayLocation(location);
+  const sLabel = page.service.name;
+  const lLabel = page.location.name;
 
   return (
     <section className="container-1300" style={{ padding: "32px 0 48px" }}>
@@ -47,16 +73,24 @@ export default function LocationPage({ params }) {
       <header style={{ marginBottom: 18 }}>
         <p className="hero-kicker">24/7 {sLabel}</p>
         <h1 className="hero-title" style={{ margin: 0 }}>
-          {sLabel} in {lLabel} — fast, reliable, affordable
+          {page.title || `${sLabel} in ${lLabel} — fast, reliable, affordable`}
         </h1>
         <p className="hero-sub">
-          Stranded in {lLabel}? Our local team provides {sLabel.toLowerCase()}, roadside assistance, tyre change, jump start and more. Average ETA ~ 30–45 minutes.
+          Stranded in {lLabel}? Our local team provides {sLabel.toLowerCase()},
+          roadside assistance, tyre change, jump start and more. Average ETA ~ 30–45 minutes.
         </p>
         <div className="hero-ctas">
           <a href="tel:+440000000000" className="btn">Call Now</a>
           <Link href="/contact" className="btn btn-outline">Book Online</Link>
         </div>
       </header>
+
+      {/* Optional custom content from DB */}
+      {page.content && page.content.trim() !== "" && (
+        <div style={{ marginBottom: 24 }}>
+          <p style={{ whiteSpace: "pre-wrap" }}>{page.content}</p>
+        </div>
+      )}
 
       {/* TRUST ROW */}
       <div className="hero-trust" style={{ marginBottom: 24 }}>
@@ -66,66 +100,86 @@ export default function LocationPage({ params }) {
       </div>
 
       {/* SERVICES GRID */}
-      <div style={{ display:"grid", gap:16, gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", marginBottom: 28 }}>
+      <div
+        style={{
+          display: "grid",
+          gap: 16,
+          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+          marginBottom: 28,
+        }}
+      >
         {[
-          "Breakdown Recovery", "Accident Recovery", "Flatbed Towing",
-          "Motorway Recovery", "Jump Start", "Tyre Change"
-        ].map((item)=>(
-          <div key={item} style={{border:"1px solid #e5e7eb", borderRadius:12, padding:16}}>
-            <h3 style={{margin:"0 0 8px"}}>{item}</h3>
-            <p className="muted" style={{margin:0}}>Fast help in {lLabel}. Upfront pricing.</p>
+          "Breakdown Recovery",
+          "Accident Recovery",
+          "Flatbed Towing",
+          "Motorway Recovery",
+          "Jump Start",
+          "Tyre Change",
+        ].map((item) => (
+          <div
+            key={item}
+            style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 16 }}
+          >
+            <h3 style={{ margin: "0 0 8px" }}>{item}</h3>
+            <p className="muted" style={{ margin: 0 }}>
+              Fast help in {lLabel}. Upfront pricing.
+            </p>
           </div>
         ))}
       </div>
 
-      {/* COPY BLOCK (SEO-friendly) */}
-      <section style={{ display:"grid", gap:14, marginBottom:28 }}>
-        <h2>Why choose us for {sLabel.toLowerCase()} in {lLabel}?</h2>
-        <ul style={{margin:0, paddingLeft:18}}>
-          <li>Rapid ETA, live driver tracking</li>
-          <li>Fixed, transparent prices before dispatch</li>
-          <li>Experienced, fully insured operators</li>
-          <li>Local knowledge across {lLabel} and nearby areas</li>
-        </ul>
-      </section>
-
-      {/* FAQ */}
-      <section>
-        <h2>FAQs — {sLabel} {lLabel}</h2>
-        <details><summary>How fast can you reach me?</summary><p>Average ETA is 30–45 minutes, depending on traffic and location.</p></details>
-        <details><summary>Do you cover motorways like M60?</summary><p>Yes, our team handles breakdowns and recovery on M60 and surrounding routes.</p></details>
-        <details><summary>What vehicles do you tow?</summary><p>Cars, SUVs, vans, and motorcycles. For special vehicles, call us first.</p></details>
-      </section>
-
-      {/* INTERNAL LINKS (help bots & users) */}
-      <hr style={{margin:"28px 0"}}/>
-      <nav style={{ display:"flex", flexWrap:"wrap", gap:10 }}>
-        {SERVICES.map(s => (
-          <Link key={s.slug} className="pill" href={`/${s.slug}/${params.location}`}>
-            {s.label} in {lLabel}
-          </Link>
-        ))}
-        {LOCATIONS.filter(l=>l.slug!==params.location).map(l => (
-          <Link key={l.slug} className="pill" href={`/${params.service}/${l.slug}`}>
-            {sLabel} in {displayLocation(l)}
-          </Link>
-        ))}
-      </nav>
+      {/* INTERNAL LINKS */}
+      <hr style={{ margin: "28px 0" }} />
+      <LinksForContext
+        serviceSlug={params.service}
+        locationSlug={params.location}
+        sLabel={sLabel}
+        lLabel={lLabel}
+      />
 
       {/* LocalBusiness schema */}
-      <script type="application/ld+json"
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
-            "@context":"https://schema.org",
-            "@type":"AutomotiveBusiness",
-            name:"Next Towing",
+            "@context": "https://schema.org",
+            "@type": "AutomotiveBusiness",
+            name: "Next Towing",
             areaServed: lLabel,
-            url:`https://your-domain.com/${params.service}/${params.location}`,
-            telephone:"+44 0000 000000",
-            sameAs:["https://facebook.com/yourbrand","https://x.com/yourbrand"]
-          })
+            url: `https://your-domain.com/${params.service}/${params.location}`,
+            telephone: "+44 0000 000000",
+            sameAs: [
+              "https://facebook.com/yourbrand",
+              "https://x.com/yourbrand",
+            ],
+          }),
         }}
       />
     </section>
+  );
+}
+
+// ---------- Helper (server component) ----------
+async function LinksForContext({ serviceSlug, locationSlug, sLabel, lLabel }) {
+  const [services, locations] = await Promise.all([
+    prisma.service.findMany({ orderBy: { name: "asc" } }),
+    prisma.location.findMany({ orderBy: { name: "asc" } }),
+  ]);
+
+  return (
+    <nav style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+      {services.map((s) => (
+        <Link key={s.id} className="pill" href={`/${s.slug}/${locationSlug}`}>
+          {s.name} in {lLabel}
+        </Link>
+      ))}
+      {locations
+        .filter((l) => l.slug !== locationSlug)
+        .map((l) => (
+          <Link key={l.id} className="pill" href={`/${serviceSlug}/${l.slug}`}>
+            {sLabel} in {l.name}
+          </Link>
+        ))}
+    </nav>
   );
 }

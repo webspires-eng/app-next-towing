@@ -1,22 +1,18 @@
-import { SERVICES, LOCATIONS } from "@/data/locations";
+import { prisma } from "@/lib/prisma";
 
 export default async function sitemap() {
   const base = "https://your-domain.com";
-  const pages = [];
+  const pages = await prisma.page.findMany({
+    include: { service: { select: { slug: true }}, location: { select: { slug: true }}}
+  });
 
-  for (const s of SERVICES) {
-    for (const l of LOCATIONS) {
-      pages.push({
-        url: `${base}/${s.slug}/${l.slug}`,
-        lastModified: new Date(),
-        changeFrequency: "daily",
-        priority: 0.8,
-      });
-    }
-  }
-
-  // add homepage etc.
-  pages.push({ url: `${base}/`, lastModified: new Date(), priority: 1.0 });
-
-  return pages;
+  return [
+    { url: `${base}/`, lastModified: new Date(), priority: 1 },
+    ...pages.map(p => ({
+      url: `${base}/${p.service.slug}/${p.location.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "daily",
+      priority: 0.8
+    }))
+  ];
 }
