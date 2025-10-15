@@ -1,0 +1,72 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum LocationType {
+  CITY
+  MOTORWAY
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pages     Page[]
+}
+
+model Location {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+  name      String
+  type      LocationType @default(CITY)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  pages     Page[]
+}
+
+model Page {
+  id         String   @id @default(cuid())
+  service    Service  @relation(fields: [serviceId], references: [id])
+  serviceId  String
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId String
+  title      String
+  content    String   @default("")
+  published  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([serviceId, locationId])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String   @default("")
+  status    String   @default("draft") // draft | published
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
