@@ -1,16 +1,23 @@
 import Hero from "@/components/Hero";
+import TrustStrip from "@/components/TrustStrip";
+import ServicesGrid from "@/components/ServicesGrid";
+import HowItWorks from "@/components/HowItWorks";
+import CoverageCTA from "@/components/CoverageCTA";
+import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
+import FinalCTA from "@/components/FinalCTA";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      {/* Example content section */}
-      <section className="container-1300" style={{ padding: "36px 0" }}>
-        <h2 style={{ marginBottom: 12 }}>Popular Services</h2>
-        <p style={{ color: "var(--muted)" }}>
-          Towing • Mobile Tyre Fitting • Jump Start • Lockout • Fuel Delivery
-        </p>
-      </section>
+      <TrustStrip />
+      <ServicesGrid />
+      <HowItWorks />
+      <CoverageCTA />
+      <Testimonials />
+      <FAQ />
+      <FinalCTA />
     </>
   );
 }
