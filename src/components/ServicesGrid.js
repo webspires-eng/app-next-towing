@@ -55,12 +55,14 @@ export default function ServicesGrid() {
               </div>
 
               <div className="card-bottom">
-                {/* open the modal */}
-                <button className="btn btn-sm" onClick={() => setOpen(true)}>
-                  Get Help
-                </button>
-                <a className="btn btn-outline btn-sm" href="tel:+440000000000">Call Now</a>
-              </div>
+  <a href="/booking" className="btn btn-sm">
+    Get Help
+  </a>
+  <a className="btn btn-outline btn-sm" href="tel:+440000000000">
+    Call Now
+  </a>
+</div>
+
             </article>
           ))}
         </div>

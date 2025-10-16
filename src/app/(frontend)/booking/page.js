@@ -3,33 +3,56 @@
 import Script from "next/script";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import VehicleSummary from "@/components/VehicleSummary";
+// import RouteMap from "@/components/RouteMap"; // not used now
+import CreativeRouteCard, { staticMapUrlFrom } from "@/components/CreativeRouteCard";
+import JourneyCard from "@/components/JourneyCard";
+
 
 // Google expects a global callback name in the URL (?callback=initGoogle)
 if (typeof window !== "undefined") {
   window.initGoogle = () => {
-    // no-op: just silences the console warning and ensures Maps is ready
+    // no-op: silences the console warning and ensures Maps is ready
+  };
+}
+
+/** Turn DVLA response into a friendly error card */
+function formatDvlaError(payload) {
+  const e = payload?.errors?.[0];
+  if (e) {
+    return {
+      heading: e.title || "Bad Request",
+      detail:
+        e.detail ||
+        "We couldn’t validate that registration. Double-check the format and try again.",
+      code: e.code || e.status || "400",
+    };
+  }
+  return {
+    heading: "Lookup failed",
+    detail:
+      payload?.message ||
+      payload?.error ||
+      "Something went wrong talking to DVLA. Please try again.",
+    code: "ERR",
   };
 }
 
 export default function BookingPage() {
-  // step wizard
-  const [step, setStep] = useState(1);
+  // ---------- Step wizard ----------
+  const [step, setStep] = useState(1); // 1 | 2 | 3
 
-  // inputs + refs for Places Autocomplete
+  // ---------- Step 1: locations & service ----------
   const pickupRef = useRef(null);
   const dropoffRef = useRef(null);
+
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
-  const [originLL, setOriginLL] = useState(null);   // {lat,lng}
-  const [destLL, setDestLL] = useState(null);       // {lat,lng}
-
-  // ETA from Distance Matrix
-  const [eta, setEta] = useState(null); // { textDistance, textDuration }
-
-  // "Use my location"
+  const [originLL, setOriginLL] = useState(null); // {lat,lng}
+  const [destLL, setDestLL] = useState(null);     // {lat,lng}
+  const [eta, setEta] = useState(null);           // { textDistance, textDuration }
   const [usingGeo, setUsingGeo] = useState(false);
 
-  // service choice
   const serviceChoices = useMemo(
     () => [
       "Vehicle Recovery",
@@ -74,7 +97,14 @@ export default function BookingPage() {
     });
   }, []);
 
-  // Server route -> Distance Matrix
+  // Distance Matrix (calls your /api/distance)
+  function computeEta() {
+    const origin = originLL ?? pickup;
+    const destination = destLL ?? dropoff;
+    if (!origin || !destination) return;
+    fetchEta(origin, destination);
+  }
+
   async function fetchEta(origin, destination) {
     const res = await fetch("/api/distance", {
       method: "POST",
@@ -89,15 +119,6 @@ export default function BookingPage() {
     setEta(data);
   }
 
-  // Helper the effect can call
-  function computeEta() {
-    const origin = originLL ?? pickup;
-    const destination = destLL ?? dropoff;
-    if (!origin || !destination) return;
-    fetchEta(origin, destination);
-  }
-
-  // Recompute when both sides are set
   useEffect(() => {
     if ((originLL || pickup) && (destLL || dropoff)) computeEta();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,6 +143,79 @@ export default function BookingPage() {
     );
   }
 
+  // ---------- Step 2: DVLA lookup ----------
+  const [vrmInput, setVrmInput] = useState("");
+  const [vehicle, setVehicle] = useState(null);
+  const [dvlaError, setDvlaError] = useState(null); // { heading, detail, code } | null
+
+  async function handleLookup() {
+    setDvlaError(null);
+    setVehicle(null);
+
+    const raw = vrmInput.trim();
+    if (!raw) {
+      setDvlaError({
+        heading: "Missing VRM",
+        detail: "Please enter a registration number (e.g. OO07 HAD).",
+        code: "EMPTY",
+      });
+      return;
+    }
+
+    const res = await fetch("/api/dvla/lookup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vrm: raw }),
+    });
+
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      setDvlaError({
+        heading: "Invalid response",
+        detail: "DVLA returned an unexpected response. Please try again.",
+        code: "PARSE",
+      });
+      return;
+    }
+
+    if (!res.ok) {
+      setDvlaError(formatDvlaError(data));
+      return;
+    }
+
+    setVehicle(data);
+  }
+
+  // ---------- Step 3: confirm/contact ----------
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [notes, setNotes] = useState("");
+
+  function handleSubmit() {
+    // TODO: send to your backend/email/DB
+    alert(
+      JSON.stringify(
+        {
+          pickup,
+          dropoff,
+          service,
+          eta,
+          vrm: vrmInput,
+          vehicle,
+          name,
+          phone,
+          email,
+          notes,
+        },
+        null,
+        2
+      )
+    );
+  }
+
   return (
     <>
       {/* Load Maps + Places (browser key) */}
@@ -140,49 +234,53 @@ export default function BookingPage() {
 
         {/* Stepper */}
         <ol className="stepper">
-          <li className={`step ${step===1?"active":""}`}>Location & Service</li>
-          <li className={`step ${step===2?"active":""}`}>Vehicle & Questions</li>
+          <li className={`step ${step === 1 ? "active" : ""}`}>Location & Service</li>
+          <li className={`step ${step === 2 ? "active" : ""}`}>Vehicle Details</li>
+          <li className={`step ${step === 3 ? "active" : ""}`}>Confirm & Contact</li>
         </ol>
 
         <section className="card-xl" style={{ padding: 16 }}>
-          {/* STEP 1 */}
+          {/* ---------- STEP 1 ---------- */}
           {step === 1 && (
-            <div>
-              <button className="btn btn-accent block" onClick={useMyLocation} disabled={usingGeo}>
-                📍 {usingGeo ? "Finding your location…" : "Use My Location"}
-              </button>
+  <div>
+    {/* ...Use My Location button... */}
 
-              <div className="field">
-                <label className="label">Need a different pickup point?</label>
-                <input
-                  ref={pickupRef}
-                  className="booking-input"
-                  placeholder="Start typing your pickup location…"
-                  defaultValue={pickup}
-                  onBlur={(e)=>setPickup(e.currentTarget.value)}
-                />
-              </div>
+    <div className="field">
+      <label className="label">Need a different pickup point?</label>
+      <input
+        ref={pickupRef}
+        className="booking-input"
+        placeholder="Start typing your pickup location…"
+        defaultValue={pickup}
+        onBlur={(e) => setPickup(e.currentTarget.value)}
+      />
+    </div>
 
-              {/* Simple embedded map for preview */}
-              <div className="map-box" aria-hidden="true">
-                <iframe
-                  title="map"
-                  width="100%"
-                  height="260"
-                  style={{ border: 0, borderRadius: 12 }}
-                  loading="lazy"
-                  src={`https://www.google.com/maps?q=${encodeURIComponent(pickup || "Manchester, UK")}&output=embed`}
-                />
-              </div>
+    {/* INSERT HERE */}
 
-              {/* distance/eta badge */}
-              <div className="map-badge">
-                <span className="pin">📍</span>
-                <div>
-                  <div className="bold">{eta?.textDistance ?? "—"}</div>
-                  <div className="muted">{eta?.textDuration ?? "Set drop-off"}</div>
-                </div>
-              </div>
+
+                <JourneyCard
+      originLabel={pickup || "Pickup"}
+      destLabel={dropoff || "Destination"}
+      distanceText={eta?.textDistance || "—"}
+      durationText={eta?.textDuration || "—"}
+      onEditPickup={() => pickupRef.current?.focus()}
+      onEditDropoff={() => dropoffRef.current?.focus()}
+      onSwap={() => {
+        setPickup((p) => {
+          const next = dropoff;
+          setDropoff(p);
+          setOriginLL((o) => {
+            const d = destLL;
+            setDestLL(o);
+            return d;
+          });
+          return next;
+        });
+      }}
+      // loading={!eta && (pickup || originLL) && (dropoff || destLL)}
+    />
+
 
               <div className="confirm-box">
                 {pickup ? `Is this your pickup spot? ${pickup}` : "Choose a pickup location."}
@@ -195,7 +293,7 @@ export default function BookingPage() {
                   className="booking-input"
                   placeholder="Start typing your destination…"
                   defaultValue={dropoff}
-                  onBlur={(e)=>setDropoff(e.currentTarget.value)}
+                  onBlur={(e) => setDropoff(e.currentTarget.value)}
                 />
               </div>
 
@@ -216,7 +314,9 @@ export default function BookingPage() {
               </div>
 
               <div className="row end" style={{ marginTop: 12 }}>
-                <Link className="btn btn-outline" href="/">Cancel</Link>
+                <Link className="btn btn-outline" href="/">
+                  Cancel
+                </Link>
                 <button
                   className="btn find-driver"
                   onClick={() => setStep(2)}
@@ -228,17 +328,109 @@ export default function BookingPage() {
             </div>
           )}
 
-          {/* STEP 2 (placeholder – plug your DVLA/vehicle questions here) */}
+          {/* ---------- STEP 2 ---------- */}
           {step === 2 && (
             <div>
-              <h2 style={{marginTop:0}}>Vehicle & Recovery Details</h2>
-              <p className="muted" style={{ marginTop: -4 }}>
-                Continue with vehicle details (DVLA lookup, quick questions, notes). Submit to your API/DB or email.
-              </p>
+              <h2 style={{ marginTop: 0 }}>Vehicle Details</h2>
+              <p className="muted">Enter your vehicle registration below to auto-fill DVLA details.</p>
+
+              <div className="row" style={{ gap: 8 }}>
+                <div className="field" style={{ flex: 1 }}>
+                  <label className="label">Vehicle registration</label>
+                  <input
+                    className={`booking-input ${dvlaError ? "input-error" : ""}`}
+                    placeholder="e.g. OO07 HAD"
+                    value={vrmInput}
+                    onChange={(e) => setVrmInput(e.target.value.toUpperCase())}
+                  />
+
+                  {/* Pretty DVLA error card */}
+                  {dvlaError && (
+                    <div className="alert alert-error" role="alert" aria-live="polite">
+                      <div className="alert-icon">⚠️</div>
+                      <div className="alert-content">
+                        <div className="alert-heading">
+                          {dvlaError.heading}
+                          {dvlaError.code && <span className="alert-tag">Code {dvlaError.code}</span>}
+                        </div>
+                        <p className="alert-text">{dvlaError.detail}</p>
+                        <ul className="alert-hints">
+                          <li>
+                            Use standard UK format (e.g. <strong>OO07 HAD</strong>).
+                          </li>
+                          <li>
+                            Try without space: <code>OO07HAD</code> or with a space: <code>OO07 HAD</code>.
+                          </li>
+                          <li>Private or very new plates may not return details yet.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ alignSelf: "end" }}>
+                  <button className="btn" onClick={handleLookup}>
+                    Lookup
+                  </button>
+                </div>
+              </div>
+
+              {/* Vehicle summary card */}
+              {vehicle && <VehicleSummary data={vehicle} />}
 
               <div className="row end" style={{ marginTop: 12 }}>
-                <button className="btn btn-outline" onClick={() => setStep(1)}>Back</button>
-                <button className="btn" onClick={() => alert("Submit to backend/email/DB here")}>Continue →</button>
+                <button className="btn btn-outline" onClick={() => setStep(1)}>
+                  Back
+                </button>
+                <button
+                  className="btn"
+                  onClick={() => setStep(3)}
+                  disabled={!vehicle}
+                  title={!vehicle ? "Lookup a valid VRM first" : ""}
+                >
+                  Continue →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ---------- STEP 3 ---------- */}
+          {step === 3 && (
+            <div>
+              <h2 style={{ marginTop: 0 }}>Confirm & Contact</h2>
+              <p className="muted">We’ll use these details to confirm your booking.</p>
+
+              <div className="grid-2" style={{ marginTop: 12 }}>
+                <div className="field">
+                  <label className="label">Name</label>
+                  <input className="booking-input" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div className="field">
+                  <label className="label">Phone</label>
+                  <input className="booking-input" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                </div>
+                <div className="field">
+                  <label className="label">Email</label>
+                  <input className="booking-input" value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div className="field" style={{ gridColumn: "1 / -1" }}>
+                  <label className="label">Notes</label>
+                  <textarea
+                    className="booking-input"
+                    rows={4}
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="row end" style={{ marginTop: 12 }}>
+                <button className="btn btn-outline" onClick={() => setStep(2)}>
+                  Back
+                </button>
+                <button className="btn" onClick={handleSubmit}>
+                  Submit Booking →
+                </button>
               </div>
             </div>
           )}

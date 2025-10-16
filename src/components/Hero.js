@@ -18,7 +18,7 @@ export default function Hero() {
           </p>
 
           <div className="hero-ctas">
-            <a href="/contact" className="btn">Get Help Now</a>
+            <a href="/booking" className="btn">Get Help Now</a>
             <a href="/about" className="btn btn-outline">Learn More</a>
           </div>
 
