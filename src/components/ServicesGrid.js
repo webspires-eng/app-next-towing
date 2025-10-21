@@ -88,6 +88,25 @@ export default function ServicesGrid() {
                   Choose the service that fits your breakdown. Every job includes transparent pricing, photo updates, and insured operators trained for complex recoveries.
                 </p>
               </header>
+<<<<<<< ours
+
+              <div className="mt-10 hidden gap-6 md:grid md:grid-cols-2">
+                {SERVICES.slice(0, 2).map(({ title, blurb, icon: Icon }) => (
+                  <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300">
+                      <Icon className="h-6 w-6" aria-hidden />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">{title}</h3>
+                    <p className="mt-2 text-sm text-slate-300">{blurb}</p>
+                    <Link href="/services" className="mt-4 inline-flex items-center text-sm font-medium text-sky-300 hover:text-sky-200">
+                      Explore service
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+=======
+>>>>>>> theirs
 
               <div className="mt-10 hidden gap-6 md:grid md:grid-cols-2">
                 {SERVICES.slice(0, 2).map(({ title, blurb, icon: Icon }) => (
@@ -105,51 +124,44 @@ export default function ServicesGrid() {
               </div>
             </div>
 
-          {/* Cards */}
-          <div className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((s) => {
-              const Icon = s.icon;
-              return (
-                <article
-                  key={s.title}
-                  className="flex h-full flex-col justify-between rounded-lg border border-border bg-card p-6 hover:shadow-medium transition-shadow duration-300"
-                >
-                  <div>
-                    <div className="mb-4 flex justify-center">
-                      <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <Icon className="h-6 w-6 text-primary" />
+            {/* Cards */}
+            <div className="relative">
+              <div className="absolute -left-10 top-1/2 hidden h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-amber-400/20 blur-3xl lg:block" aria-hidden />
+              <div className="relative grid w-full gap-6 sm:grid-cols-2">
+                {SERVICES.map((s) => {
+                  const Icon = s.icon;
+                  return (
+                    <article
+                      key={s.title}
+                      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-[0_30px_60px_-50px_rgba(15,23,42,0.9)] backdrop-blur transition hover:-translate-y-1 hover:border-sky-400/40 hover:bg-slate-900/80"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-sky-400/10 text-sky-300">
+                          <Icon className="h-6 w-6" aria-hidden />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">{s.title}</h3>
+                          <p className="mt-2 text-sm text-slate-300">{s.blurb}</p>
+                        </div>
                       </div>
-                    </div>
 
-                    <h3 className="text-center text-xl font-semibold text-card-foreground">{s.title}</h3>
-                    <p className="mt-2 text-center text-muted-foreground">{s.blurb}</p>
-
-                    <div className="mt-3 flex items-center justify-center">
-                      <Link href={s.href} className="text-sm font-medium text-primary hover:underline">
-                        Learn more →
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setOpen(true)}
-                      className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
-                    >
-                      Get Help
-                    </button>
-                    <a
-                      href="tel:+440000000000"
-                      className="inline-flex items-center rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-accent"
-                    >
-                      Call Now
-                    </a>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+                      <div className="mt-6 flex items-center justify-between text-sm font-medium text-sky-300">
+                        <button
+                          type="button"
+                          onClick={() => setOpen(true)}
+                          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-wide text-slate-200 transition hover:border-amber-300/60 hover:bg-amber-400/10 hover:text-white"
+                        >
+                          Dispatch crew
+                        </button>
+                        <Link href={s.href} className="inline-flex items-center gap-1 text-sky-300 transition hover:text-sky-200">
+                          Details
+                          <span aria-hidden>→</span>
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
 
               <div className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-slate-200 backdrop-blur">
                 <p className="text-sm uppercase tracking-[0.4em] text-slate-400">Need something bespoke?</p>
