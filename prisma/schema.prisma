@@ -34,12 +34,17 @@ model User {
 }
 
 model Service {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  pages     Page[]
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  name            String
+  description     String   @default("")
+  excerpt         String   @default("")
+  metaTitle       String   @default("")
+  metaDescription String   @default("")
+  featuredImage   String   @default("")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  pages           Page[]
 }
 
 model Location {
