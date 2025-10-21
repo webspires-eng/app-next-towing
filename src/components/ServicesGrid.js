@@ -88,26 +88,6 @@ export default function ServicesGrid() {
                   Choose the service that fits your breakdown. Every job includes transparent pricing, photo updates, and insured operators trained for complex recoveries.
                 </p>
               </header>
-<<<<<<< ours
-
-              <div className="mt-10 hidden gap-6 md:grid md:grid-cols-2">
-                {SERVICES.slice(0, 2).map(({ title, blurb, icon: Icon }) => (
-                  <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300">
-                      <Icon className="h-6 w-6" aria-hidden />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">{title}</h3>
-                    <p className="mt-2 text-sm text-slate-300">{blurb}</p>
-                    <Link href="/services" className="mt-4 inline-flex items-center text-sm font-medium text-sky-300 hover:text-sky-200">
-                      Explore service
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-=======
->>>>>>> theirs
-
               <div className="mt-10 hidden gap-6 md:grid md:grid-cols-2">
                 {SERVICES.slice(0, 2).map(({ title, blurb, icon: Icon }) => (
                   <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
