@@ -1,9 +1,21 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 import Link from "next/link";
 
 export const runtime = "nodejs";
 
 export default async function AdminHome() {
+  if (!databaseConfigured) {
+    return (
+      <section>
+        <h1 style={{ margin: 0, marginBottom: 16 }}>Dashboard</h1>
+        <p className="muted">
+          Connect your database via <code>DATABASE_URL</code> to surface live metrics.
+        </p>
+      </section>
+    );
+  }
+
   const [services, locations, pages, posts, users] = await Promise.all([
     prisma.service.count(),
     prisma.location.count(),

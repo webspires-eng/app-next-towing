@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 import { redirect } from "next/navigation";
 
 export const runtime = "nodejs";
@@ -6,6 +7,10 @@ const slugify = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/
 
 async function createPost(formData) {
   "use server";
+  if (!databaseConfigured) {
+    console.warn("DATABASE_URL not set – skipping post create.");
+    return;
+  }
   const title   = String(formData.get("title") || "").trim();
   const slug    = slugify(title || String(formData.get("slug") || ""));
   const content = String(formData.get("content") || "");
@@ -16,6 +21,17 @@ async function createPost(formData) {
 }
 
 export default function NewPost() {
+  if (!databaseConfigured) {
+    return (
+      <section className="container-1300 section-space">
+        <h1>Create Post</h1>
+        <p className="muted">
+          Configure <code>DATABASE_URL</code> to publish articles from the dashboard.
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section className="container-1300 section-space">
       <h1>Create Post</h1>

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 
@@ -6,6 +7,7 @@ export const runtime = "nodejs";
 
 async function removePost(formData) {
   "use server";
+  if (!databaseConfigured) return;
   const id = String(formData.get("id") || "");
   if (!id) return;
   try { await prisma.post.delete({ where: { id } }); } catch {}
@@ -13,6 +15,20 @@ async function removePost(formData) {
 }
 
 export default async function PostsList() {
+  if (!databaseConfigured) {
+    return (
+      <section>
+        <header className="section-head">
+          <h1 style={{ margin: 0 }}>Posts</h1>
+          <Link href="/dashboard/posts/new" className="btn">
+            New
+          </Link>
+        </header>
+        <p className="muted">Set <code>DATABASE_URL</code> to manage blog posts.</p>
+      </section>
+    );
+  }
+
   const rows = await prisma.post.findMany({ orderBy: { updatedAt: "desc" } });
   return (
     <section>

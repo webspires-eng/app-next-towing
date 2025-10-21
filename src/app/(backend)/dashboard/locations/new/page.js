@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 import { redirect } from "next/navigation";
 
 export const runtime = "nodejs";
@@ -6,6 +7,10 @@ const slugify = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/
 
 async function createLocation(formData) {
   "use server";
+  if (!databaseConfigured) {
+    console.warn("DATABASE_URL not set – skipping location create.");
+    return;
+  }
   const name = String(formData.get("name") || "").trim();
   const type = String(formData.get("type") || "CITY");
   const slug = slugify(name || String(formData.get("slug") || ""));
@@ -15,6 +20,17 @@ async function createLocation(formData) {
 }
 
 export default function NewLocation() {
+  if (!databaseConfigured) {
+    return (
+      <section className="container-1300 section-space">
+        <h1>Create Location</h1>
+        <p className="muted">
+          Configure <code>DATABASE_URL</code> to enable location management tools.
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section className="container-1300 section-space">
       <h1>Create Location</h1>

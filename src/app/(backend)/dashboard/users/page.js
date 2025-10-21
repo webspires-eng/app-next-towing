@@ -1,8 +1,18 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export const runtime = "nodejs";
 
 export default async function UsersList() {
+  if (!databaseConfigured) {
+    return (
+      <section>
+        <h1>Users</h1>
+        <p className="muted">Set <code>DATABASE_URL</code> to manage accounts.</p>
+      </section>
+    );
+  }
+
   const rows = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
   return (
     <section>

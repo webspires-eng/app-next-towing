@@ -1,15 +1,29 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export const revalidate = 60;
 
 export async function generateStaticParams() {
+  if (!databaseConfigured) {
+    return [];
+  }
+
   const all = await prisma.service.findMany({ select: { slug: true } });
-  return all.map(s => ({ service: s.slug }));
+  return all.map((s) => ({ service: s.slug }));
 }
 
 export async function generateMetadata({ params }) {
+  if (!databaseConfigured) {
+    const label = params.service.replace(/-/g, " ");
+    return {
+      title: `${label} — Areas We Cover | Next Towing`,
+      description:
+        "Service listings are unavailable until a database connection is configured. Contact dispatch for availability.",
+    };
+  }
+
   const svc = await prisma.service.findUnique({ where: { slug: params.service } });
   if (!svc) return { title: "Service not found" };
   return {
@@ -19,6 +33,20 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ServiceArchive({ params }) {
+  if (!databaseConfigured) {
+    return (
+      <section className="container-1300" style={{ padding: "28px 0 40px" }}>
+        <h1>{params.service.replace(/-/g, " ")} — Areas We Cover</h1>
+        <p className="muted" style={{ marginTop: 12 }}>
+          Connect a database by setting <code>DATABASE_URL</code> to list locations for this service.
+        </p>
+        <Link className="btn btn-outline" style={{ marginTop: 32 }} href="/services">
+          ← All services
+        </Link>
+      </section>
+    );
+  }
+
   const svc = await prisma.service.findUnique({
     where: { slug: params.service },
   });

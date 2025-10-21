@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export const revalidate = 60;
 
@@ -9,6 +10,17 @@ export const metadata = {
 };
 
 export default async function AreasIndex() {
+  if (!databaseConfigured) {
+    return (
+      <section className="container-1300" style={{ padding: "28px 0 40px" }}>
+        <h1>Areas We Cover</h1>
+        <p className="muted" style={{ marginTop: 12 }}>
+          Provide a <code>DATABASE_URL</code> to list all active service areas.
+        </p>
+      </section>
+    );
+  }
+
   const locations = await prisma.location.findMany({
     orderBy: { name: "asc" },
   });

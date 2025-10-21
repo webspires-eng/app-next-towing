@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 
@@ -6,6 +7,7 @@ export const runtime = "nodejs";
 
 async function removeLocation(formData) {
   "use server";
+  if (!databaseConfigured) return;
   const id = String(formData.get("id") || "");
   if (!id) return;
   try { await prisma.location.delete({ where: { id } }); } catch {}
@@ -13,6 +15,20 @@ async function removeLocation(formData) {
 }
 
 export default async function LocationsList() {
+  if (!databaseConfigured) {
+    return (
+      <section>
+        <header className="section-head">
+          <h1 style={{ margin: 0 }}>Locations</h1>
+          <Link href="/dashboard/locations/new" className="btn">
+            New
+          </Link>
+        </header>
+        <p className="muted">Set <code>DATABASE_URL</code> to manage location content.</p>
+      </section>
+    );
+  }
+
   const rows = await prisma.location.findMany({ orderBy: { name: "asc" } });
   return (
     <section>

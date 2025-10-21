@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export const revalidate = 60;
 
@@ -9,6 +10,17 @@ export const metadata = {
 };
 
 export default async function ServicesIndex() {
+  if (!databaseConfigured) {
+    return (
+      <section className="container-1300" style={{ padding: "28px 0 40px" }}>
+        <h1>Services</h1>
+        <p className="muted" style={{ marginTop: 12 }}>
+          Set <code>DATABASE_URL</code> to populate this directory from your content database.
+        </p>
+      </section>
+    );
+  }
+
   const services = await prisma.service.findMany({
     orderBy: { name: "asc" },
   });

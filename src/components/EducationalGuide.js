@@ -1,4 +1,4 @@
-import { BookOpen, Car, Fuel, Zap } from 'lucide-react';
+import { BookOpen, BookOpenCheck, Car, Fuel, Zap } from 'lucide-react';
 
 const guides = [
   {

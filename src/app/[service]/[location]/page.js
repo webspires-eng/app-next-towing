@@ -2,11 +2,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export const revalidate = 60; // ISR: refresh every 60s
 
 // ---------- Pre-render only pages that exist in DB ----------
 export async function generateStaticParams() {
+  if (!databaseConfigured) {
+    return [];
+  }
+
   const rows = await prisma.page.findMany({
     include: {
       service: { select: { slug: true } },
@@ -23,6 +28,17 @@ export async function generateStaticParams() {
 
 // ---------- SEO / Metadata ----------
 export async function generateMetadata({ params }) {
+  if (!databaseConfigured) {
+    const serviceLabel = params.service.replace(/-/g, " ");
+    const locationLabel = params.location.replace(/-/g, " ");
+    const title = `${serviceLabel} ${locationLabel} | Next Towing`;
+    return {
+      title,
+      description:
+        "Detailed local landing pages require a connected database. Configure DATABASE_URL to enable them.",
+    };
+  }
+
   const page = await prisma.page.findFirst({
     where: {
       published: true,
@@ -53,6 +69,33 @@ export async function generateMetadata({ params }) {
 
 // ---------- Page ----------
 export default async function LocationPage({ params }) {
+  if (!databaseConfigured) {
+    const sLabel = params.service.replace(/-/g, " ");
+    const lLabel = params.location.replace(/-/g, " ");
+
+    return (
+      <section className="container-1300" style={{ padding: "32px 0 48px" }}>
+        <header style={{ marginBottom: 18 }}>
+          <p className="hero-kicker">24/7 {sLabel}</p>
+          <h1 className="hero-title" style={{ margin: 0 }}>
+            {sLabel} in {lLabel}
+          </h1>
+        </header>
+        <p className="muted">
+          Provision a database and set <code>DATABASE_URL</code> to publish tailored local content on this page.
+        </p>
+        <div className="hero-ctas" style={{ marginTop: 24 }}>
+          <a href="tel:+440000000000" className="btn">
+            Call Now
+          </a>
+          <Link href="/contact" className="btn btn-outline">
+            Book Online
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
   const page = await prisma.page.findFirst({
     where: {
       published: true,
@@ -161,6 +204,10 @@ export default async function LocationPage({ params }) {
 
 // ---------- Helper (server component) ----------
 async function LinksForContext({ serviceSlug, locationSlug, sLabel, lLabel }) {
+  if (!databaseConfigured) {
+    return null;
+  }
+
   const [services, locations] = await Promise.all([
     prisma.service.findMany({ orderBy: { name: "asc" } }),
     prisma.location.findMany({ orderBy: { name: "asc" } }),

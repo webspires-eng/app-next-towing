@@ -1,9 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export default async function sitemap() {
   const base = "https://your-domain.com";
+  if (!databaseConfigured) {
+    return [{ url: `${base}/`, lastModified: new Date(), priority: 1 }];
+  }
+
   const pages = await prisma.page.findMany({
-    include: { service: { select: { slug: true }}, location: { select: { slug: true }}}
+    include: { service: { select: { slug: true } }, location: { select: { slug: true } } },
   });
 
   return [

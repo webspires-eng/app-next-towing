@@ -1,15 +1,29 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { databaseConfigured } from "@/lib/env";
 
 export const revalidate = 60;
 
 export async function generateStaticParams() {
+  if (!databaseConfigured) {
+    return [];
+  }
+
   const all = await prisma.location.findMany({ select: { slug: true } });
-  return all.map(l => ({ location: l.slug }));
+  return all.map((l) => ({ location: l.slug }));
 }
 
 export async function generateMetadata({ params }) {
+  if (!databaseConfigured) {
+    const label = params.location.replace(/-/g, " ");
+    return {
+      title: `${label} — Services | Next Towing`,
+      description:
+        "Area coverage is hidden until a database connection is configured. Contact dispatch to confirm availability.",
+    };
+  }
+
   const loc = await prisma.location.findUnique({ where: { slug: params.location } });
   if (!loc) return { title: "Area not found" };
   return {
@@ -19,6 +33,20 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function LocationArchive({ params }) {
+  if (!databaseConfigured) {
+    return (
+      <section className="container-1300" style={{ padding: "28px 0 40px" }}>
+        <h1>{params.location.replace(/-/g, " ")} — Services</h1>
+        <p className="muted" style={{ marginTop: 12 }}>
+          Configure <code>DATABASE_URL</code> to list services available in this area.
+        </p>
+        <Link className="btn btn-outline" style={{ marginTop: 32 }} href="/areas">
+          ← All areas
+        </Link>
+      </section>
+    );
+  }
+
   const loc = await prisma.location.findUnique({
     where: { slug: params.location },
   });
