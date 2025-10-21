@@ -17,24 +17,24 @@ const milestones = [
 
 export default function ResponseGuarantee() {
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto w-full max-w-6xl px-6 xl:px-0">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Response guarantee</p>
-          <h2 className="mt-3 text-balance text-4xl font-semibold text-slate-900">Our promise from the moment you call</h2>
-          <p className="mt-4 text-base text-slate-600">
+    <section className="section-shell section-muted text-[#0E172B]">
+      <div className="section-inner">
+        <div className="section-heading">
+          <div className="section-eyebrow border border-[#0E172B]/10 bg-[#0E172B]/5 text-[#0E172B]">Response guarantee</div>
+          <h2 className="section-title text-[#0E172B]">Our promise from the moment you call</h2>
+          <p className="section-description">
             Every dispatch is monitored by senior controllers with escalation routes if traffic or incidents change the plan.
           </p>
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-3">
           {milestones.map(({ title, description }, index) => (
-            <div key={title} className="relative rounded-3xl border border-slate-200 bg-slate-50 p-6">
-              <div className="absolute -top-4 left-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-white">
+            <div key={title} className="relative rounded-3xl border border-[#0E172B]/10 bg-white p-6 shadow-[0_24px_60px_-45px_rgba(14,23,43,0.15)]">
+              <div className="absolute -top-4 left-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0E172B] text-white">
                 {index === 0 ? <Phone className="h-4 w-4" aria-hidden /> : index === 1 ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : <Clock className="h-4 w-4" aria-hidden />}
               </div>
-              <p className="mt-6 text-lg font-semibold text-slate-900">{title}</p>
-              <p className="mt-3 text-sm text-slate-600">{description}</p>
+              <p className="mt-6 text-lg font-semibold text-[#0E172B]">{title}</p>
+              <p className="mt-3 text-sm text-[#0E172B]/70">{description}</p>
             </div>
           ))}
         </div>

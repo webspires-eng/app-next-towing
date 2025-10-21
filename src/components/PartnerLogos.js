@@ -2,12 +2,12 @@ const partners = ['Greater Manchester Police', 'Highways England', 'Manchester A
 
 export default function PartnerLogos() {
   return (
-    <section className="bg-slate-50 py-16">
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-6 text-center xl:px-0">
-        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Trusted collaborations</p>
-        <div className="flex flex-wrap justify-center gap-6 text-sm font-semibold uppercase tracking-[0.35em] text-slate-400">
+    <section className="section-shell bg-white text-[#0E172B]">
+      <div className="section-inner flex w-full flex-col items-center gap-8 text-center">
+        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0E172B]">Trusted collaborations</p>
+        <div className="flex flex-wrap justify-center gap-6 text-sm font-semibold uppercase tracking-[0.35em] text-[#0E172B]/50">
           {partners.map((partner) => (
-            <span key={partner} className="rounded-full border border-slate-200 bg-white px-5 py-3 text-slate-500 shadow-sm">
+            <span key={partner} className="rounded-full border border-[#0E172B]/10 bg-white px-5 py-3 text-[#0E172B]/70 shadow-sm">
               {partner}
             </span>
           ))}

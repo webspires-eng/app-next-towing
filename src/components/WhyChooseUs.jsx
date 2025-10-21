@@ -14,33 +14,30 @@ const features = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="flex justify-center bg-black py-16 md:py-24">
-      <div className="container-1300 w-full px-4">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Why Choose Our Recovery Service?
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-white/70">
-            Professional vehicle breakdown assistance you can trust, backed by years of experience
+    <section className="section-shell bg-white text-[#0E172B]">
+      <div className="section-inner">
+        <div className="section-heading">
+          <div className="section-eyebrow border border-[#0E172B]/10 bg-[#0E172B]/5 text-[#0E172B]">
+            Trusted expertise
+          </div>
+          <h2 className="section-title text-[#0E172B]">Why choose our recovery service?</h2>
+          <p className="section-description">
+            Professional vehicle breakdown assistance you can trust, backed by years of experience.
           </p>
         </div>
 
-        <div
-          className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          role="list"
-          aria-label="Key reasons to choose us"
-        >
+        <div className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Key reasons to choose us">
           {features.map(({ icon: Icon, title, description }) => (
             <Card
               key={title}
               role="listitem"
-              className="flex h-full w-full flex-col items-center rounded-xl border border-white/10 bg-neutral-900/70 p-6 text-center shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.55)]"
+              className="flex h-full w-full flex-col items-center rounded-2xl border border-[#0E172B]/10 bg-white p-6 text-center shadow-[0_12px_30px_rgba(14,23,43,0.12)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(14,23,43,0.18)]"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-yellow-400/40 bg-yellow-400/15">
-                <Icon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FACC14]/40 bg-[#FACC14]/15">
+                <Icon className="h-6 w-6 text-[#FACC14]" aria-hidden="true" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-white">{title}</h3>
-              <p className="text-white/70">{description}</p>
+              <h3 className="mb-2 text-xl font-semibold text-[#0E172B]">{title}</h3>
+              <p className="text-[#0E172B]/70">{description}</p>
             </Card>
           ))}
         </div>

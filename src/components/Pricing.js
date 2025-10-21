@@ -26,40 +26,39 @@ const tiers = [
 
 export default function Pricing() {
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto w-full max-w-6xl px-6 xl:px-0">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Pricing</p>
-          <h2 className="mt-3 text-balance text-4xl font-semibold text-slate-900">
+    <section className="section-shell section-muted text-[#0E172B]">
+      <div className="section-inner">
+        <div className="section-heading">
+          <div className="section-eyebrow border border-[#0E172B]/10 bg-[#0E172B]/5 text-[#0E172B]">Pricing</div>
+          <h2 className="section-title text-[#0E172B]">
             Straightforward packages with no weekend or night surcharges
           </h2>
-          <p className="mt-4 text-base text-slate-600">
-            Every job is confirmed with a written quote by text and email before our crew sets off, so you always know the
-            cost.
+          <p className="section-description">
+            Every job is confirmed with a written quote by text and email before our crew sets off, so you always know the cost.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-3">
           {tiers.map(({ name, price, description, features, highlighted }) => (
             <div
               key={name}
-              className={`flex h-full flex-col rounded-3xl border p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
+              className={`flex h-full flex-col rounded-3xl border p-8 shadow-[0_30px_60px_-45px_rgba(14,23,43,0.15)] transition hover:-translate-y-1 ${
                 highlighted
-                  ? 'border-slate-900 bg-slate-900 text-white shadow-[0_40px_80px_-40px_rgba(15,23,42,0.7)]'
-                  : 'border-slate-200 bg-white text-slate-900'
+                  ? 'border-[#FACC14] bg-[#0E172B] text-white'
+                  : 'border-[#0E172B]/10 bg-white'
               }`}
             >
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
+              <p className={`text-xs font-semibold uppercase tracking-[0.3em] ${highlighted ? 'text-white/70' : 'text-[#0E172B]/60'}`}>
                 {highlighted ? 'Most booked' : 'Package'}
               </p>
-              <h3 className="mt-4 text-2xl font-semibold">{name}</h3>
-              <p className="mt-4 text-5xl font-semibold">{price}</p>
-              <p className={`mt-4 text-sm ${highlighted ? 'text-slate-200' : 'text-slate-600'}`}>{description}</p>
-              <ul className="mt-6 space-y-3 text-sm">
+              <h3 className={`mt-4 text-2xl font-semibold ${highlighted ? 'text-white' : 'text-[#0E172B]'}`}>{name}</h3>
+              <p className={`mt-4 text-5xl font-semibold ${highlighted ? 'text-[#FACC14]' : 'text-[#0E172B]'}`}>{price}</p>
+              <p className={`mt-4 text-sm ${highlighted ? 'text-white/75' : 'text-[#0E172B]/70'}`}>{description}</p>
+              <ul className={`mt-6 space-y-3 text-sm ${highlighted ? 'text-white/80' : 'text-[#0E172B]/80'}`}>
                 {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
-                    <Check className="mt-[2px] h-4 w-4" aria-hidden />
-                    <span className={highlighted ? 'text-slate-100' : 'text-slate-600'}>{feature}</span>
+                    <Check className="mt-[2px] h-4 w-4 text-[#FACC14]" aria-hidden />
+                    <span>{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -67,8 +66,8 @@ export default function Pricing() {
                 type="button"
                 className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition ${
                   highlighted
-                    ? 'bg-white text-slate-900 hover:bg-slate-100'
-                    : 'bg-slate-900 text-white hover:bg-slate-800'
+                    ? 'bg-white text-[#0E172B] hover:bg-[#FACC14]'
+                    : 'bg-[#0E172B] text-white hover:bg-[#0E172B]/90'
                 }`}
               >
                 {highlighted ? 'Book this package' : 'Discuss this option'}

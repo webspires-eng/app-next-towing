@@ -28,34 +28,36 @@ const comparisonRows = [
 
 export default function ComparisonSection() {
   return (
-    <section className="bg-slate-900 py-20 text-white">
-      <div className="mx-auto w-full max-w-6xl px-6 xl:px-0">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-300">Why drivers switch to Next Towing</p>
-          <h2 className="mt-3 text-balance text-4xl font-semibold">
+    <section className="section-shell bg-white text-[#0E172B]">
+      <div className="section-inner">
+        <div className="section-heading">
+          <div className="section-eyebrow border border-[#0E172B]/10 bg-[#0E172B]/5 text-[#0E172B]">
+            Why drivers switch to Next Towing
+          </div>
+          <h2 className="section-title text-[#0E172B]">
             Side-by-side with typical recovery brokers and national call centres
           </h2>
-          <p className="mt-4 text-base text-slate-300">
+          <p className="section-description">
             We cut the friction that slows down traditional recovery: no call transfers, no hidden extras, and no uncertainty
             about who is arriving to help you.
           </p>
         </div>
 
-        <div className="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-          <table className="min-w-full divide-y divide-white/10">
-            <thead className="bg-white/5 text-left text-sm uppercase tracking-[0.3em] text-slate-200">
+        <div className="mt-10 overflow-hidden rounded-3xl border border-[#0E172B]/10 bg-white shadow-[0_24px_60px_-45px_rgba(14,23,43,0.15)]">
+          <table className="min-w-full divide-y divide-[#0E172B]/10">
+            <thead className="bg-[#0E172B]/5 text-left text-sm uppercase tracking-[0.3em] text-[#0E172B]">
               <tr>
                 <th className="px-6 py-4 font-semibold">Service factor</th>
-                <th className="px-6 py-4 font-semibold text-sky-300">Next Towing</th>
-                <th className="px-6 py-4 font-semibold text-slate-300">Typical providers</th>
+                <th className="px-6 py-4 font-semibold text-[#0E172B]">Next Towing</th>
+                <th className="px-6 py-4 font-semibold text-[#0E172B]/60">Typical providers</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-sm">
+            <tbody className="divide-y divide-[#0E172B]/10 text-sm">
               {comparisonRows.map(({ label, nextTowing, others }) => (
-                <tr key={label} className="transition hover:bg-white/10">
-                  <td className="px-6 py-5 text-slate-200">{label}</td>
-                  <td className="px-6 py-5 font-semibold text-white">{nextTowing}</td>
-                  <td className="px-6 py-5 text-slate-300">{others}</td>
+                <tr key={label} className="transition hover:bg-[#0E172B]/5">
+                  <td className="px-6 py-5 text-[#0E172B]/80">{label}</td>
+                  <td className="px-6 py-5 font-semibold text-[#0E172B]">{nextTowing}</td>
+                  <td className="px-6 py-5 text-[#0E172B]/60">{others}</td>
                 </tr>
               ))}
             </tbody>

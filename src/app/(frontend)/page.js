@@ -4,20 +4,16 @@ import LiveStats from "@/components/LiveStats";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Services from "@/components/Services";
 import ExtendedServices from "@/components/ExtendedServices";
-import PriceCalculator from "@/components/PriceCalculator";
 import About from "@/components/About";
 import ComparisonSection from "@/components/ComparisonSection";
 import Pricing from "@/components/Pricing";
 import PaymentMethods from "@/components/PaymentMethods";
 import HowItWorks from "@/components/HowItWorks";
 import FleetShowcase from "@/components/FleetShowcase";
-import DriverProfiles from "@/components/DriverProfiles";
 import SafetySection from "@/components/SafetySection";
-import BeforeAfterGallery from "@/components/BeforeAfterGallery";
 import EducationalGuide from "@/components/EducationalGuide";
 import SeasonalStats from "@/components/SeasonalStats";
 import LocalCoverage from "@/components/LocalCoverage";
-import CoverageMap from "@/components/CoverageMap";
 import ResponseGuarantee from "@/components/ResponseGuarantee";
 import EmergencyChecklist from "@/components/EmergencyChecklist";
 import InsurancePartners from "@/components/InsurancePartners";
@@ -35,20 +31,16 @@ export default function Home() {
       <WhyChooseUs />
       <Services />
       <ExtendedServices />
-      <PriceCalculator />
       <About />
       <ComparisonSection />
       <Pricing />
       <PaymentMethods />
       <HowItWorks />
       <FleetShowcase />
-      <DriverProfiles />
       <SafetySection />
-      <BeforeAfterGallery />
       <EducationalGuide />
       <SeasonalStats />
       <LocalCoverage />
-      <CoverageMap />
       <ResponseGuarantee />
       <EmergencyChecklist />
       <InsurancePartners />

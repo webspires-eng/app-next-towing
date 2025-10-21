@@ -20,28 +20,31 @@ const badges = [
 
 export default function TrustBadges() {
   return (
-    <section className="border-b border-slate-200 bg-slate-50 py-12">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 xl:px-0">
-        <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-            Trusted by drivers across Greater Manchester
-          </p>
-          <h2 className="mt-3 text-balance text-3xl font-semibold text-slate-900">
+    <section className="section-shell bg-white text-[#0E172B]">
+      <div className="section-inner">
+        <div className="section-heading">
+          <div className="section-eyebrow border border-[#0E172B]/10 bg-[#0E172B]/5 text-[#0E172B]">
+            Trusted across Greater Manchester
+          </div>
+          <h2 className="section-title text-[#0E172B]">
             Independent accreditation and reviews you can rely on
           </h2>
+          <p className="section-description">
+            Every dispatch is handled by certified operators with the feedback to prove it.
+          </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
           {badges.map(({ icon: Icon, label, description }) => (
             <div
               key={label}
-              className="rounded-2xl border border-white/60 bg-white p-6 shadow-[0_15px_45px_-30px_rgba(15,23,42,0.45)]"
+              className="rounded-2xl border border-[#0E172B]/10 bg-white p-6 text-center shadow-[0_18px_45px_-35px_rgba(14,23,43,0.2)]"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-900 text-white">
-                <Icon className="h-5 w-5" aria-hidden />
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#FACC14]/15 text-[#FACC14]">
+                <Icon className="h-6 w-6" aria-hidden />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900">{label}</h3>
-              <p className="mt-2 text-sm text-slate-500">{description}</p>
+              <h3 className="text-lg font-semibold text-[#0E172B]">{label}</h3>
+              <p className="mt-2 text-sm text-[#0E172B]/70">{description}</p>
             </div>
           ))}
         </div>

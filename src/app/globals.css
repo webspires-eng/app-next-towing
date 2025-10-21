@@ -9,14 +9,15 @@
 /* ========= Theme Variables ========= */
 :root {
   /* Brand */
-  --brand: #facc15;     /* Hero yellow */
-  --accent: #facc15;
+  --brand: #facc14;
+  --accent: #facc14;
   --black: #000000;
   --white: #ffffff;
 
   /* Body/Text */
-  --text: #f3f4f6;
-  --muted: rgba(226, 232, 240, 0.75);
+  --text: #0e172b;
+  --muted: rgba(14, 23, 43, 0.7);
+  --surface-alt: #eff2f5;
 
   /* Layout */
   --maxw: 1300px;
@@ -28,35 +29,35 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --radius: 0.625rem;
-  --background: #050505;
-  --foreground: #f9fafb;
-  --card: #111111;
-  --card-foreground: #f9fafb;
-  --popover: #111111;
-  --popover-foreground: #f9fafb;
-  --primary: #facc15;
-  --primary-foreground: #111111;
-  --secondary: #18181b;
-  --secondary-foreground: #f9fafb;
-  --muted-foreground: rgba(226, 232, 240, 0.75);
-  --accent-foreground: #111111;
-  --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.12);
-  --input: rgba(255, 255, 255, 0.16);
-  --ring: #facc15;
-  --chart-1: #facc15;
-  --chart-2: #fde68a;
-  --chart-3: #f59e0b;
-  --chart-4: #fbbf24;
-  --chart-5: #fde047;
-  --sidebar: #050505;
-  --sidebar-foreground: #f9fafb;
-  --sidebar-primary: #facc15;
-  --sidebar-primary-foreground: #111111;
-  --sidebar-accent: rgba(250, 204, 21, 0.1);
-  --sidebar-accent-foreground: #facc15;
+  --background: #ffffff;
+  --foreground: #0e172b;
+  --card: #ffffff;
+  --card-foreground: #0e172b;
+  --popover: #ffffff;
+  --popover-foreground: #0e172b;
+  --primary: #facc14;
+  --primary-foreground: #000000;
+  --secondary: #0e172b;
+  --secondary-foreground: #ffffff;
+  --muted-foreground: rgba(14, 23, 43, 0.7);
+  --accent-foreground: #0e172b;
+  --destructive: #000000;
+  --border: rgba(14, 23, 43, 0.1);
+  --input: rgba(14, 23, 43, 0.12);
+  --ring: #facc14;
+  --chart-1: #facc14;
+  --chart-2: rgba(250, 204, 20, 0.7);
+  --chart-3: rgba(14, 23, 43, 0.7);
+  --chart-4: rgba(0, 0, 0, 0.7);
+  --chart-5: rgba(255, 255, 255, 0.7);
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #facc14;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: rgba(250, 204, 20, 0.15);
+  --sidebar-accent-foreground: #facc14;
   --sidebar-border: rgba(255, 255, 255, 0.12);
-  --sidebar-ring: #facc15;
+  --sidebar-ring: #facc14;
 }
 .container-1300 {
   max-width: var(--maxw);
@@ -70,6 +71,70 @@
     padding-left: 16px;
     padding-right: 16px;
   }
+}
+
+/* Shared section layout helpers */
+.section-shell {
+  padding-top: clamp(4rem, 8vw, 6.5rem);
+  padding-bottom: clamp(4rem, 8vw, 6.5rem);
+  width: 100%;
+}
+
+.section-inner {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 4vw, 3rem);
+  padding-right: clamp(1rem, 4vw, 3rem);
+}
+
+.section-heading {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+}
+
+.section-heading.section-heading--left {
+  margin-left: 0;
+  text-align: left;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.section-heading .section-eyebrow {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-heading .section-title {
+  margin-top: 1.25rem;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.section-heading .section-description {
+  margin-top: 1.25rem;
+  font-size: 1.0625rem;
+  color: rgba(14, 23, 43, 0.7);
+}
+
+.section-muted {
+  background: var(--surface-alt);
 }
 
 /* Dark mode surface tokens */
