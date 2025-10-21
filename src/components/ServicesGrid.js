@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import BookingModal from '@/components/BookingModal';
-import { Wrench, Car, Truck, Road, BatteryCharging, CircleDot } from 'lucide-react';
+import { Wrench, Car, Truck, Route, BatteryCharging, CircleDot } from 'lucide-react';
 
 const SERVICES = [
   { icon: Wrench, title: 'Breakdown Recovery', blurb: 'Rapid roadside recovery when your car won’t go.', href: '/services' },
   { icon: Car, title: 'Accident Recovery', blurb: 'Safe transport after collisions, day or night.', href: '/services' },
   { icon: Truck, title: 'Flatbed Towing', blurb: 'AWD & low-clearance friendly vehicle transport.', href: '/services' },
-  { icon: Road, title: 'Motorway Recovery', blurb: 'M60 and nearby motorways covered fast.', href: '/services' },
+  { icon: Route, title: 'Motorway Recovery', blurb: 'M60 and nearby motorways covered fast.', href: '/services' },
   { icon: BatteryCharging, title: 'Jump Start', blurb: 'Dead battery? We’ll get you moving.', href: '/services' },
   { icon: CircleDot, title: 'Tyre Change', blurb: 'On-site spare changes & assistance.', href: '/services' },
 ];
