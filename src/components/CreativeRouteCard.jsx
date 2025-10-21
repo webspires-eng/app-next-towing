@@ -57,11 +57,11 @@ export default function CreativeRouteCard({
           <svg viewBox="0 0 300 80" preserveAspectRatio="none">
             <defs>
               <linearGradient id="rt-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#1E66F5" />
-                <stop offset="100%" stopColor="#6CA8FF" />
+                <stop offset="0%" stopColor="rgba(250,204,21,0.95)" />
+                <stop offset="100%" stopColor="rgba(250,204,21,0.4)" />
               </linearGradient>
               <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="rgba(16,24,40,.15)" />
+                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="rgba(250,204,21,.25)" />
               </filter>
             </defs>
 
@@ -85,7 +85,7 @@ export default function CreativeRouteCard({
             </path>
 
             {/* little glint moving along the path */}
-            <circle r="5" fill="#ffffff" opacity="0.9">
+            <circle r="5" fill="rgba(250,204,21,0.95)" opacity="0.9">
               <animateMotion
                 dur="3.2s"
                 repeatCount="indefinite"

@@ -242,52 +242,41 @@ export default function BookingPage() {
         <section className="card-xl" style={{ padding: 16 }}>
           {/* ---------- STEP 1 ---------- */}
           {step === 1 && (
-  <div>
-    {/* ...Use My Location button... */}
+            <div className="step-grid">
+              <div className="step-headline">
+                <div>
+                  <h2>Set pickup & destination</h2>
+                  <p>
+                    Drop precise locations so we can calculate distance, dispatch the nearest truck, and send you live ETAs.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={useMyLocation}
+                  disabled={usingGeo}
+                >
+                  {usingGeo ? "Locating…" : "Use my location"}
+                </button>
+              </div>
 
-    <div className="field">
-      <label className="label">Need a different pickup point?</label>
-      <input
-        ref={pickupRef}
-        className="booking-input"
-        placeholder="Start typing your pickup location…"
-        defaultValue={pickup}
-        onBlur={(e) => setPickup(e.currentTarget.value)}
-      />
-    </div>
-
-    {/* INSERT HERE */}
-
-
-                <JourneyCard
-      originLabel={pickup || "Pickup"}
-      destLabel={dropoff || "Destination"}
-      distanceText={eta?.textDistance || "—"}
-      durationText={eta?.textDuration || "—"}
-      onEditPickup={() => pickupRef.current?.focus()}
-      onEditDropoff={() => dropoffRef.current?.focus()}
-      onSwap={() => {
-        setPickup((p) => {
-          const next = dropoff;
-          setDropoff(p);
-          setOriginLL((o) => {
-            const d = destLL;
-            setDestLL(o);
-            return d;
-          });
-          return next;
-        });
-      }}
-      // loading={!eta && (pickup || originLL) && (dropoff || destLL)}
-    />
-
+              <div className="field">
+                <label className="label">Where do we collect the vehicle?</label>
+                <input
+                  ref={pickupRef}
+                  className="booking-input"
+                  placeholder="Start typing your pickup location…"
+                  defaultValue={pickup}
+                  onBlur={(e) => setPickup(e.currentTarget.value)}
+                />
+              </div>
 
               <div className="confirm-box">
                 {pickup ? `Is this your pickup spot? ${pickup}` : "Choose a pickup location."}
               </div>
 
               <div className="field">
-                <label className="label">Where to deliver the vehicle?</label>
+                <label className="label">Where should we deliver it?</label>
                 <input
                   ref={dropoffRef}
                   className="booking-input"
@@ -296,6 +285,27 @@ export default function BookingPage() {
                   onBlur={(e) => setDropoff(e.currentTarget.value)}
                 />
               </div>
+
+              <JourneyCard
+                originLabel={pickup || "Pickup"}
+                destLabel={dropoff || "Destination"}
+                distanceText={eta?.textDistance || "—"}
+                durationText={eta?.textDuration || "—"}
+                onEditPickup={() => pickupRef.current?.focus()}
+                onEditDropoff={() => dropoffRef.current?.focus()}
+                onSwap={() => {
+                  setPickup((p) => {
+                    const next = dropoff;
+                    setDropoff(p);
+                    setOriginLL((o) => {
+                      const d = destLL;
+                      setDestLL(o);
+                      return d;
+                    });
+                    return next;
+                  });
+                }}
+              />
 
               <div className="field">
                 <label className="label">What type of service do you need?</label>

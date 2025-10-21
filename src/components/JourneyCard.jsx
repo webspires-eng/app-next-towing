@@ -1,230 +1,102 @@
-// JourneyCardMinimal.jsx
 "use client";
 
 import React from "react";
 
-/**
- * JourneyCardMinimal.jsx
- * A simplified, inline-styled card showing only route info (no animations/map).
- * Full width, as requested.
- *
- * Props:
- * - originLabel      string
- * - destLabel        string
- * - distanceText     string (e.g. "3.5 km")
- * - durationText     string (e.g. "10 mins")
- * - onEditPickup     () => void
- * - onEditDropoff    () => void
- * - onSwap           () => void
- */
 export default function JourneyCardMinimal({
-  originLabel = "OL8",
-  destLabel = "OL9",
-  distanceText = "3.5 KM",
-  durationText = "10 MINS",
+  originLabel = "Pickup",
+  destLabel = "Destination",
+  distanceText = "—",
+  durationText = "—",
   onEditPickup,
   onEditDropoff,
   onSwap,
 }) {
-  const S = {
-    card: {
-      borderRadius: 16,
-      border: "1px solid #eef0f3",
-      background: "#fff",
-      padding: 18,
-      boxShadow:
-        "0 10px 20px rgba(17,24,39,0.06), inset 0 1px 0 rgba(255,255,255,0.5)",
-      width: "100%", // Full width
-      boxSizing: "border-box", 
-    },
-    header: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginBottom: 12,
-    },
-    title: {
-      fontSize: 18,
-      fontWeight: 700,
-      color: "#1f2937",
-      letterSpacing: "-0.01em",
-    },
-    statPill: {
-      display: "inline-flex",
-      alignItems: "center",
-      gap: 8,
-      padding: "8px 14px",
-      borderRadius: 14,
-      border: "1px solid #ff7a45",
-      backgroundColor: "#fffaf7",
-      color: "#ff7a45",
-      fontWeight: 700,
-      fontSize: 14,
-      textTransform: "uppercase", // Apply uppercase to the pill text
-    },
-    statIcon: {
-      lineHeight: 1,
-      color: "#ff7a45",
-    },
-    bullet: {
-      opacity: 0.5,
-    },
-    row: {
-      display: "grid",
-      gridTemplateColumns: "1fr auto 1fr",
-      gap: 14,
-      alignItems: "stretch",
-      marginTop: 6,
-    },
-    chip: {
-      all: "unset", 
-      boxSizing: "border-box",
-      borderRadius: 14,
-      border: "1px dashed #dfe4ea",
-      padding: 14,
-      minHeight: 72,
-      display: "grid",
-      alignContent: "center",
-      gap: 4,
-      cursor: "pointer",
-      background:
-        "linear-gradient(180deg, rgba(250,251,252,0.9), rgba(250,251,252,0.6))",
-      textAlign: "left", 
-      transition: "border-color 0.15s ease, box-shadow 0.15s ease",
-    },
-    chipTitle: {
-      display: "flex",
-      alignItems: "center",
-      gap: 8,
-      color: "#6b7280",
-      fontSize: 12,
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      fontWeight: 700,
-    },
-    chipValue: {
-      fontSize: 20,
-      fontWeight: 800,
-      color: "#111827",
-      letterSpacing: "-0.02em",
-      wordBreak: "break-word",
-      textTransform: "uppercase", // Crucial change: apply uppercase to the value
-    },
-    swapButton: {
-      all: "unset", 
-      boxSizing: "border-box",
-      width: 44,
-      height: 44,
-      borderRadius: 12,
-      border: "1px solid #e6e8ec",
-      background:
-        "linear-gradient(180deg,#fff,rgba(255,255,255,0.8)) padding-box, linear-gradient(180deg,#e6e8ec,#dfe3e8) border-box",
-      display: "grid",
-      placeItems: "center",
-      cursor: "pointer",
-      alignSelf: "center",
-      justifySelf: "center",
-      transition: "transform .12s ease",
-      color: "#6b7280",
-    },
-  };
-
   return (
-    <div style={S.card}>
-      <style>{`
-        .jc-chip-hover:hover {
-            border-color: #1b85e0;
-            box-shadow: 0 0 0 3px rgba(27, 133, 224, 0.1);
-        }
-        .jc-swap-active:active {
-            transform: scale(0.96);
-        }
-      `}</style>
-
-      {/* HEADER */}
-      <div style={S.header}>
-        <div style={S.title}>Your Route</div>
-        <div style={S.statPill}>
-          <span style={S.statIcon}>
-            {/* Clock icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-          </span>
-          {/* Stat pill text is uppercase via S.statPill style */}
+    <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-900/80 p-5 text-white shadow-[0_20px_54px_rgba(0,0,0,0.45)]">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          background:
+            "radial-gradient(120% 60% at 0% 0%, rgba(250,204,21,0.15), transparent 60%), radial-gradient(120% 60% at 100% 100%, rgba(250,204,21,0.08), transparent 65%)",
+        }}
+      />
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
+        <div className="text-lg font-semibold">Your Route</div>
+        <div className="inline-flex items-center gap-3 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-yellow-200">
           <span>{durationText}</span>
-          <span style={S.bullet}>•</span>
+          <span className="opacity-50">•</span>
           <span>{distanceText}</span>
         </div>
       </div>
 
-      {/* CHIPS + SWAP */}
-      <div style={S.row}>
+      <div className="relative z-10 mt-6 grid grid-cols-[1fr_auto_1fr] items-stretch gap-4">
         <button
           type="button"
           onClick={onEditPickup}
-          aria-label="Edit pickup"
-          style={S.chip}
-          className="jc-chip-hover"
+          className="group flex min-h-[84px] flex-col justify-center rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-left transition-colors hover:border-yellow-300/50 hover:bg-yellow-300/10"
         >
-          <div style={S.chipTitle}>
-            <span>🚩 PICKUP</span>
-          </div>
-          {/* Chip value is uppercase via S.chipValue style */}
-          <div style={S.chipValue}>{originLabel}</div>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">Pickup</span>
+          <span className="mt-2 text-lg font-semibold text-white/90 group-hover:text-white">{originLabel}</span>
         </button>
 
         <button
           type="button"
+          onClick={onSwap}
           title="Swap pickup & destination"
           aria-label="Swap"
-          onClick={onSwap}
-          style={S.swapButton}
-          className="jc-swap-active"
+          className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-black/40 text-white transition transform hover:-translate-y-0.5 hover:border-yellow-300/60 hover:bg-yellow-300/10"
         >
-          {/* Swap icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="3"
+            strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="text-yellow-300"
           >
-            <path d="M12 5v14" />
-            <path d="m19 12-7 7-7-7" />
-            <path d="M12 19V5" />
-            <path d="m5 12 7-7 7 7" />
+            <polyline points="16 3 21 8 16 13" />
+            <line x1="21" y1="8" x2="9" y2="8" />
+            <polyline points="8 21 3 16 8 11" />
+            <line x1="15" y1="16" x2="3" y2="16" />
           </svg>
         </button>
 
         <button
           type="button"
           onClick={onEditDropoff}
-          aria-label="Edit destination"
-          style={S.chip}
-          className="jc-chip-hover"
+          className="group flex min-h-[84px] flex-col justify-center rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-right transition-colors hover:border-yellow-300/50 hover:bg-yellow-300/10"
         >
-          <div style={S.chipTitle}>
-            <span>📍 DESTINATION</span>
-          </div>
-          {/* Chip value is uppercase via S.chipValue style */}
-          <div style={S.chipValue}>{destLabel}</div>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">Destination</span>
+          <span className="mt-2 text-lg font-semibold text-white/90 group-hover:text-white">{destLabel}</span>
         </button>
+      </div>
+
+      <div className="relative z-10 mt-8">
+        <svg viewBox="0 0 300 80" preserveAspectRatio="none" className="h-24 w-full">
+          <defs>
+            <linearGradient id="jc-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(250,204,21,0.9)" />
+              <stop offset="100%" stopColor="rgba(250,204,21,0.4)" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M10,70 C80,5 220,5 290,70"
+            fill="none"
+            stroke="url(#jc-grad)"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeDasharray="10 12"
+          >
+            <animate attributeName="stroke-dashoffset" from="0" to="-200" dur="3.2s" repeatCount="indefinite" />
+          </path>
+          <circle r="5" fill="rgba(250,204,21,0.9)">
+            <animateMotion dur="3.2s" repeatCount="indefinite" path="M10,70 C80,5 220,5 290,70" />
+          </circle>
+        </svg>
       </div>
     </div>
   );
