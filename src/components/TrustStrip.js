@@ -7,64 +7,54 @@ export default function TrustBadges() {
   const badges = [
     {
       icon: Shield,
-      ring: 'bg-[#00407F]/10',
-      color: 'text-[#00407F]',
       title: 'PAS43:2018',
       sub: 'Certified Recovery',
     },
     {
       icon: Award,
-      ring: 'bg-[#00407F]/10',
-      color: 'text-[#00407F]',
       title: 'Trading Standards',
       sub: 'Approved Service',
     },
     {
       icon: Star,
-      ring: 'bg-[#FFBF00]/10',
-      color: 'text-[#FFBF00]',
       title: '4.8/5 Stars',
       sub: 'Google Reviews',
     },
     {
       icon: CheckCircle,
-      ring: 'bg-[#00407F]/10',
-      color: 'text-[#00407F]',
       title: '100% Insured',
       sub: 'Full Coverage',
     },
     {
       icon: Users,
-      ring: 'bg-[#00407F]/10',
-      color: 'text-[#00407F]',
       title: '10,000+',
       sub: 'Happy Customers',
     },
   ];
 
   return (
-    <section className="py-16 bg-white border-y border-gray-200 flex justify-center">
-      <div className="container-1300 px-4 flex flex-col items-center justify-center w-full">
+    <section className="flex justify-center border-y border-white/10 bg-black py-16">
+      <div className="container-1300 w-full px-4">
         <div
-          className="grid grid-cols-2 md:grid-cols-5 gap-6 w-full"
+          className="grid w-full grid-cols-2 gap-6 md:grid-cols-5"
           role="list"
           aria-label="Company trust badges"
         >
-          {badges.map(({ icon: Icon, ring, color, title, sub }) => (
+          {badges.map(({ icon: Icon, title, sub }) => (
             <Card
               key={title}
               role="listitem"
-              className="p-6 h-full flex flex-col items-center justify-center text-center w-full hover:shadow-lg transition-shadow bg-gray-50 border border-gray-100 rounded-xl"
+              className="flex h-full w-full flex-col items-center justify-center rounded-xl border border-white/10 bg-neutral-900/60 p-6 text-center shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
             >
               <div
-                className={`mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full ${ring}`}
+                className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full border border-yellow-400/40 bg-yellow-400/15"
               >
-                <Icon className={`h-6 w-6 ${color}`} aria-hidden="true" />
+                <Icon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
               </div>
-              <div className="text-sm font-semibold text-gray-900 mb-1">
+              <div className="mb-1 text-sm font-semibold text-white">
                 {title}
               </div>
-              <div className="text-xs text-gray-500">{sub}</div>
+              <div className="text-xs text-white/70">{sub}</div>
             </Card>
           ))}
         </div>

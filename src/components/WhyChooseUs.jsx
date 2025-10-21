@@ -14,13 +14,13 @@ const features = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="flex justify-center py-16 md:py-24 bg-muted/30">
+    <section className="flex justify-center bg-black py-16 md:py-24">
       <div className="container-1300 w-full px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Why Choose Our Recovery Service?
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-lg text-white/70">
             Professional vehicle breakdown assistance you can trust, backed by years of experience
           </p>
         </div>
@@ -34,14 +34,13 @@ export default function WhyChooseUs() {
             <Card
               key={title}
               role="listitem"
-              className="h-full w-full p-6 rounded-xl border-border bg-card hover:shadow-md transition-shadow
-                         flex flex-col items-center text-center"
+              className="flex h-full w-full flex-col items-center rounded-xl border border-white/10 bg-neutral-900/70 p-6 text-center shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.55)]"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-yellow-400/40 bg-yellow-400/15">
+                <Icon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-card-foreground">{title}</h3>
-              <p className="text-muted-foreground">{description}</p>
+              <h3 className="mb-2 text-xl font-semibold text-white">{title}</h3>
+              <p className="text-white/70">{description}</p>
             </Card>
           ))}
         </div>

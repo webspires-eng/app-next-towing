@@ -6,10 +6,10 @@ const REVIEWS = [
 
 export default function Testimonials() {
   return (
-    <section className="section-alt">
+    <section className="section-alt text-white">
       <div className="container-1300 section-space">
         <header className="section-head">
-          <h2>What customers say</h2>
+          <h2 className="text-white">What customers say</h2>
         </header>
         <div className="reviews">
           {REVIEWS.map(r => (

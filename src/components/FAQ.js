@@ -21,7 +21,7 @@ function toJsonLd() {
 
 export default function FAQ() {
   return (
-    <section className="container-1300 section-space">
+    <section className="container-1300 section-space text-white">
       {/* SEO: FAQPage schema */}
       <script
         type="application/ld+json"

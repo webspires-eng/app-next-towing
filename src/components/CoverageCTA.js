@@ -1,6 +1,6 @@
 export default function CoverageCTA() {
   return (
-    <section className="container-1300 section-space">
+    <section className="container-1300 section-space text-white">
       <div className="coverage">
         <div>
           <h2>Areas we cover</h2>
