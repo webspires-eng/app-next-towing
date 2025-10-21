@@ -1,9 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const runtime = "nodejs";
 
 export default async function AdminHome() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300 section-space">
+        <h1>Dashboard</h1>
+        <p className="muted" style={{ marginTop: 16 }}>
+          Connect the Prisma database (DATABASE_URL) to unlock admin analytics and content management.
+        </p>
+      </section>
+    );
+  }
+
   const [services, locations, pages, posts, users] = await Promise.all([
     prisma.service.count(),
     prisma.location.count(),

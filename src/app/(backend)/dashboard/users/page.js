@@ -1,8 +1,19 @@
 import { prisma } from "@/lib/prisma";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const runtime = "nodejs";
 
 export default async function UsersList() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300 section-space">
+        <h1>Users</h1>
+        <p className="muted">Database connection required to list internal users.</p>
+      </section>
+    );
+  }
+
   const rows = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
   return (
     <section>

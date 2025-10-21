@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const runtime = "nodejs";
 const slugify = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 
@@ -9,11 +11,21 @@ async function createService(formData) {
   const name = String(formData.get("name") || "").trim();
   const slug = slugify(name || String(formData.get("slug") || ""));
   if (!name || !slug) return;
+  if (!hasDatabase) return;
   try { await prisma.service.create({ data: { name, slug } }); } catch {}
   redirect("/dashboard/services");
 }
 
 export default function NewService() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300 section-space">
+        <h1>Create Service</h1>
+        <p className="muted">Database connection required to manage service catalogue.</p>
+      </section>
+    );
+  }
+
   return (
     <section className="container-1300 section-space">
       <h1>Create Service</h1>

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const revalidate = 60;
 
 export const metadata = {
@@ -9,6 +11,18 @@ export const metadata = {
 };
 
 export default async function AreasIndex() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300" style={{ padding: "28px 0 40px" }}>
+        <h1>Areas We Cover</h1>
+        <p className="muted" style={{ marginTop: 16 }}>
+          Connect a database to list specific coverage areas. Until then, call our 24/7 team to confirm availability in your
+          location.
+        </p>
+      </section>
+    );
+  }
+
   const locations = await prisma.location.findMany({
     orderBy: { name: "asc" },
   });

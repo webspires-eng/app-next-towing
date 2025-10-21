@@ -2,17 +2,34 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const runtime = "nodejs";
 
 async function removeLocation(formData) {
   "use server";
   const id = String(formData.get("id") || "");
   if (!id) return;
+  if (!hasDatabase) return;
   try { await prisma.location.delete({ where: { id } }); } catch {}
   revalidatePath("/dashboard/locations");
 }
 
 export default async function LocationsList() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300 section-space">
+        <header className="section-head">
+          <h1 style={{ margin: 0 }}>Locations</h1>
+          <Link href="/dashboard/locations/new" className="btn" aria-disabled>
+            New
+          </Link>
+        </header>
+        <p className="muted">Database connection required to manage locations.</p>
+      </section>
+    );
+  }
+
   const rows = await prisma.location.findMany({ orderBy: { name: "asc" } });
   return (
     <section>

@@ -1,14 +1,27 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const revalidate = 60;
 
 export const metadata = {
   title: "All Services | Next Towing",
-  description: "Towing & car recovery services across all areas we cover."
+  description: "Towing & car recovery services across all areas we cover.",
 };
 
 export default async function ServicesIndex() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300" style={{ padding: "28px 0 40px" }}>
+        <h1>Services</h1>
+        <p className="muted" style={{ marginTop: 16 }}>
+          Connect a database to surface service-specific landing pages. Our dispatch team can still advise on coverage by phone.
+        </p>
+      </section>
+    );
+  }
+
   const services = await prisma.service.findMany({
     orderBy: { name: "asc" },
   });

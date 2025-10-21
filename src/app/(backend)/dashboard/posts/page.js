@@ -2,17 +2,34 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const runtime = "nodejs";
 
 async function removePost(formData) {
   "use server";
   const id = String(formData.get("id") || "");
   if (!id) return;
+  if (!hasDatabase) return;
   try { await prisma.post.delete({ where: { id } }); } catch {}
   revalidatePath("/dashboard/posts");
 }
 
 export default async function PostsList() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300 section-space">
+        <header className="section-head">
+          <h1 style={{ margin: 0 }}>Posts</h1>
+          <Link href="/dashboard/posts/new" className="btn" aria-disabled>
+            New
+          </Link>
+        </header>
+        <p className="muted">Configure DATABASE_URL to manage blog posts.</p>
+      </section>
+    );
+  }
+
   const rows = await prisma.post.findMany({ orderBy: { updatedAt: "desc" } });
   return (
     <section>

@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const runtime = "nodejs";
 const slugify = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 
@@ -11,11 +13,21 @@ async function createPost(formData) {
   const content = String(formData.get("content") || "");
   const status  = String(formData.get("status") || "draft");
   if (!title || !slug) return;
+  if (!hasDatabase) return;
   try { await prisma.post.create({ data: { title, slug, content, status } }); } catch {}
   redirect("/dashboard/posts");
 }
 
 export default function NewPost() {
+  if (!hasDatabase) {
+    return (
+      <section className="container-1300 section-space">
+        <h1>Create Post</h1>
+        <p className="muted">Database connection required to publish blog content.</p>
+      </section>
+    );
+  }
+
   return (
     <section className="container-1300 section-space">
       <h1>Create Post</h1>

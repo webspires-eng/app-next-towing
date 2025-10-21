@@ -3,10 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
+const hasDatabase = Boolean(process.env.DATABASE_URL);
+
 export const revalidate = 60; // ISR: refresh every 60s
 
 // ---------- Pre-render only pages that exist in DB ----------
 export async function generateStaticParams() {
+  if (!hasDatabase) return [];
   const rows = await prisma.page.findMany({
     include: {
       service: { select: { slug: true } },
@@ -23,6 +26,20 @@ export async function generateStaticParams() {
 
 // ---------- SEO / Metadata ----------
 export async function generateMetadata({ params }) {
+  if (!hasDatabase) {
+    const serviceLabel = formatSlug(params.service);
+    const locationLabel = formatSlug(params.location);
+    const title = `${serviceLabel} ${locationLabel} | 24/7 Rapid Response • Next Towing`;
+    const description = `Need ${serviceLabel.toLowerCase()} in ${locationLabel}? Call Next Towing for immediate help.`;
+    const url = `https://your-domain.com/${params.service}/${params.location}`;
+    return {
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: { title, description, url, type: "website" },
+    };
+  }
+
   const page = await prisma.page.findFirst({
     where: {
       published: true,
@@ -53,6 +70,74 @@ export async function generateMetadata({ params }) {
 
 // ---------- Page ----------
 export default async function LocationPage({ params }) {
+  if (!hasDatabase) {
+    const serviceLabel = formatSlug(params.service);
+    const locationLabel = formatSlug(params.location);
+
+    return (
+      <section className="container-1300" style={{ padding: "32px 0 48px" }}>
+        <header style={{ marginBottom: 18 }}>
+          <p className="hero-kicker">24/7 {serviceLabel}</p>
+          <h1 className="hero-title" style={{ margin: 0 }}>
+            {serviceLabel} in {locationLabel} — fast, reliable, affordable
+          </h1>
+          <p className="hero-sub">
+            Configure a database connection to surface tailored copy for this location. Until then, call our dispatch team for
+            immediate help in {locationLabel}.
+          </p>
+          <div className="hero-ctas">
+            <a href="tel:+440000000000" className="btn">
+              Call Now
+            </a>
+            <Link href="/contact" className="btn btn-outline">
+              Book Online
+            </Link>
+          </div>
+        </header>
+
+        <div style={{ marginBottom: 24 }}>
+          <p className="muted">
+            Service availability, nearby depots, and bespoke messaging will appear once database credentials are provided.
+          </p>
+        </div>
+
+        <div className="hero-trust" style={{ marginBottom: 24 }}>
+          <div className="pill">✅ Fully insured</div>
+          <div className="pill">🕑 24/7 dispatch</div>
+          <div className="pill">📍 Local support</div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gap: 16,
+            gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+            marginBottom: 28,
+          }}
+        >
+          {["Breakdown Recovery", "Accident Recovery", "Flatbed Towing", "Motorway Recovery", "Jump Start", "Tyre Change"].map(
+            (item) => (
+              <div
+                key={item}
+                style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 16 }}
+              >
+                <h3 style={{ margin: "0 0 8px" }}>{item}</h3>
+                <p className="muted" style={{ margin: 0 }}>
+                  Fast help throughout Greater Manchester.
+                </p>
+              </div>
+            ),
+          )}
+        </div>
+
+        <hr style={{ margin: "28px 0" }} />
+        <Link className="btn btn-outline" href="/services">
+          ← All services
+        </Link>
+      </section>
+    );
+  }
+
   const page = await prisma.page.findFirst({
     where: {
       published: true,
@@ -108,24 +193,19 @@ export default async function LocationPage({ params }) {
           marginBottom: 28,
         }}
       >
-        {[
-          "Breakdown Recovery",
-          "Accident Recovery",
-          "Flatbed Towing",
-          "Motorway Recovery",
-          "Jump Start",
-          "Tyre Change",
-        ].map((item) => (
-          <div
-            key={item}
-            style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 16 }}
-          >
-            <h3 style={{ margin: "0 0 8px" }}>{item}</h3>
-            <p className="muted" style={{ margin: 0 }}>
-              Fast help in {lLabel}. Upfront pricing.
-            </p>
-          </div>
-        ))}
+        {["Breakdown Recovery", "Accident Recovery", "Flatbed Towing", "Motorway Recovery", "Jump Start", "Tyre Change"].map(
+          (item) => (
+            <div
+              key={item}
+              style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 16 }}
+            >
+              <h3 style={{ margin: "0 0 8px" }}>{item}</h3>
+              <p className="muted" style={{ margin: 0 }}>
+                Fast help in {lLabel}. Upfront pricing.
+              </p>
+            </div>
+          ),
+        )}
       </div>
 
       {/* INTERNAL LINKS */}
@@ -161,6 +241,8 @@ export default async function LocationPage({ params }) {
 
 // ---------- Helper (server component) ----------
 async function LinksForContext({ serviceSlug, locationSlug, sLabel, lLabel }) {
+  if (!hasDatabase) return null;
+
   const [services, locations] = await Promise.all([
     prisma.service.findMany({ orderBy: { name: "asc" } }),
     prisma.location.findMany({ orderBy: { name: "asc" } }),
@@ -182,4 +264,10 @@ async function LinksForContext({ serviceSlug, locationSlug, sLabel, lLabel }) {
         ))}
     </nav>
   );
+}
+
+function formatSlug(slug = "") {
+  return decodeURIComponent(slug)
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
