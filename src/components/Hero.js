@@ -28,9 +28,10 @@ export default function Hero() {
             <span className="inline-flex h-2 w-2 rounded-full bg-[#FACC14]" aria-hidden />
             24/7 live dispatch
           </div>
-          <h1 className=" text-balance text-white drop-shadow-lg">
-            Emergency vehicle recovery, towing & roadside rescue — whenever you need it
-          </h1>
+         <h1 class="text-white text-5xl md:text-6xl lg:text-5xl font-extrabold drop-shadow-2xl">
+  Emergency vehicle recovery, towing & roadside rescue — whenever you need it
+</h1>
+
           <p className="section-description text-white">
             From motorway breakdowns to driveway transport, our control room keeps Greater Manchester moving with real-time dispatch,
             specialist flatbeds, and pricing confirmed before we roll.

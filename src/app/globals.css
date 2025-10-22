@@ -756,6 +756,24 @@ textarea.input{ resize: vertical; }
 .dash-metric{ font-size: 34px; font-weight: 800; line-height: 1; margin-top: 6px; color: #0e172b; }
 .dash-label{ color: rgba(14,23,43,0.6); font-weight: 600; }
 
+.admin-shell .input{
+  background: #ffffff;
+  color: #0e172b;
+  border: 1px solid rgba(14,23,43,0.12);
+}
+.admin-shell .input::placeholder{
+  color: rgba(14,23,43,0.45);
+}
+.admin-shell .input:focus{
+  outline: none;
+  border-color: rgba(250,204,20,0.6);
+  box-shadow: 0 0 0 3px rgba(250,204,20,0.22);
+  background: #ffffff;
+}
+.admin-shell textarea.input{
+  resize: vertical;
+}
+
 /* tone accents (subtle left border) */
 .dash-card::before{
   content:""; position: absolute; inset: 0; border-radius: 14px; pointer-events: none;
