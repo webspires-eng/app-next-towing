@@ -12,9 +12,17 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const loc = await prisma.location.findUnique({ where: { slug: params.location } });
   if (!loc) return { title: "Area not found" };
+  const pageTitle = loc.metaTitle || `${loc.name} — Services | Next Towing`;
+  const pageDescription =
+    loc.metaDescription || `See all towing & car recovery services available in ${loc.name}.`;
   return {
-    title: `${loc.name} — Services | Next Towing`,
-    description: `See all towing & car recovery services available in ${loc.name}.`,
+    title: pageTitle,
+    description: pageDescription,
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      images: loc.featuredImage ? [{ url: loc.featuredImage }] : undefined,
+    },
   };
 }
 
@@ -32,8 +40,21 @@ export default async function LocationArchive({ params }) {
 
   return (
     <div className="bg-black text-white">
-      <section className="relative flex justify-center overflow-hidden py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(250,204,21,0.18),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(250,204,21,0.12),transparent_60%)]" />
+      <section
+        className="relative flex justify-center overflow-hidden py-20"
+        style={
+          loc.featuredImage
+            ? {
+                backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.75), rgba(0,0,0,0.6)), url(${loc.featuredImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : undefined
+        }
+      >
+        {!loc.featuredImage && (
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(250,204,21,0.18),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(250,204,21,0.12),transparent_60%)]" />
+        )}
         <div className="container-1300 relative z-10 w-full px-4">
           <header className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-yellow-400/40 bg-yellow-400/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-yellow-300">
@@ -41,12 +62,23 @@ export default async function LocationArchive({ params }) {
             </span>
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Recovery services in {loc.name}</h1>
             <p className="mt-4 text-white/70">
-              Our on-call teams operate throughout {loc.name} with fast access to the motorway network. Select a service
-              to learn more about average ETAs, pricing guidance, and how to request help.
+              {loc.excerpt ||
+                `Our on-call teams operate throughout ${loc.name} with fast access to the motorway network. Select a service to learn more about average ETAs, pricing guidance, and how to request help.`}
             </p>
           </header>
         </div>
       </section>
+
+      {loc.description && loc.description.trim() !== "" && (
+        <section className="flex justify-center border-b border-white/10 bg-neutral-950/70 py-16">
+          <div className="container-1300 w-full px-4">
+            <div
+              className="mx-auto max-w-3xl text-base leading-relaxed text-white/70 [&_h2]:text-white [&_h3]:text-white [&_strong]:text-white [&_a]:text-yellow-300 [&_a:hover]:underline"
+              dangerouslySetInnerHTML={{ __html: loc.description }}
+            />
+          </div>
+        </section>
+      )}
 
       <section className="flex justify-center bg-black py-16">
         <div className="container-1300 w-full px-4">

@@ -9,7 +9,10 @@ async function deleteService(formData) {
   const id = String(formData.get("serviceId") || "");
   if (!id) return;
   try {
-    await prisma.service.delete({ where: { id } });
+    await prisma.$transaction([
+      prisma.page.deleteMany({ where: { serviceId: id } }),
+      prisma.service.delete({ where: { id } }),
+    ]);
   } catch (error) {
     console.error("Failed to delete service", error);
   }

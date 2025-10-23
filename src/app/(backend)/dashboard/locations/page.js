@@ -9,7 +9,10 @@ async function removeLocation(formData) {
   const id = String(formData.get("id") || "");
   if (!id) return;
   try {
-    await prisma.location.delete({ where: { id } });
+    await prisma.$transaction([
+      prisma.page.deleteMany({ where: { locationId: id } }),
+      prisma.location.delete({ where: { id } }),
+    ]);
   } catch (error) {
     console.error("Failed to delete location", error);
   }

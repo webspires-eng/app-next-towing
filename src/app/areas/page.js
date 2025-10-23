@@ -38,31 +38,44 @@ export default async function AreasIndex() {
               <Link
                 key={location.id}
                 href={`/areas/${location.slug}`}
-                className="group flex h-full flex-col justify-between rounded-2xl border border-white/10 bg-neutral-900/70 p-6 text-white shadow-[0_18px_44px_rgba(0,0,0,0.45)] transition-transform duration-200 hover:-translate-y-1 hover:border-yellow-300/50 hover:shadow-[0_26px_60px_rgba(0,0,0,0.55)]"
+                className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-neutral-900/70 text-white shadow-[0_18px_44px_rgba(0,0,0,0.45)] transition-transform duration-200 hover:-translate-y-1 hover:border-yellow-300/50 hover:shadow-[0_26px_60px_rgba(0,0,0,0.55)]"
               >
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-yellow-300">Location</p>
-                  <h2 className="mt-3 text-2xl font-semibold">{location.name}</h2>
-                  <p className="mt-3 text-sm text-white/70">
-                    Discover services available in {location.name}. Rapid response teams stationed nearby for faster ETAs.
-                  </p>
+                {location.featuredImage && (
+                  <div className="relative h-40 w-full overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={location.featuredImage}
+                      alt={`${location.name} featured`}
+                      className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-yellow-300">Location</p>
+                    <h2 className="mt-3 text-2xl font-semibold">{location.name}</h2>
+                    <p className="mt-3 text-sm text-white/70">
+                      {location.excerpt || `Discover services available in ${location.name}. Rapid response teams stationed nearby for faster ETAs.`}
+                    </p>
+                  </div>
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-yellow-300 transition-colors group-hover:text-yellow-200">
+                    View services
+                    <svg
+                      aria-hidden="true"
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.6"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m13 6 6 6-6 6" />
+                    </svg>
+                  </span>
                 </div>
-                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-yellow-300 transition-colors group-hover:text-yellow-200">
-                  View services
-                  <svg
-                    aria-hidden="true"
-                    className="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.6"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="m13 6 6 6-6 6" />
-                  </svg>
-                </span>
               </Link>
             ))}
           </div>

@@ -48,13 +48,18 @@ model Service {
 }
 
 model Location {
-  id        String       @id @default(cuid())
-  slug      String       @unique
-  name      String
-  type      LocationType @default(CITY)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  pages     Page[]
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  name            String
+  type            LocationType @default(CITY)
+  excerpt         String       @default("")
+  description     String       @default("")
+  metaTitle       String       @default("")
+  metaDescription String       @default("")
+  featuredImage   String       @default("")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  pages           Page[]
 }
 
 model Page {
