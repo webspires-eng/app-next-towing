@@ -42,9 +42,9 @@ export default function Hero() {
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-[#FACC14] px-8 py-3 text-black shadow-[0_20px_45px_-18px_rgba(250,204,20,0.85)] transition hover:bg-[#ffe05a] hover:shadow-[0_24px_55px_-20px_rgba(250,204,20,0.9)]"
+            className="rounded-full bg-[#FACC14] px-8 py-3 text-black hover:text-black shadow-[0_20px_45px_-18px_rgba(250,204,20,0.85)] transition hover:bg-[#ffe05a] hover:shadow-[0_24px_55px_-20px_rgba(250,204,20,0.9)] [&>a]:text-black [&>a:hover]:text-black"
           >
-            <a href="tel:08001234567">
+            <a href="tel:08001234567" className="text-black hover:text-black">
               <PhoneCall className="mr-2 h-5 w-5" aria-hidden /> Call now 0800 123 4567
             </a>
           </Button>

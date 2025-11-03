@@ -195,25 +195,37 @@ export default function BookingPage() {
   const [notes, setNotes] = useState("");
 
   function handleSubmit() {
-    // TODO: send to your backend/email/DB
-    alert(
-      JSON.stringify(
-        {
-          pickup,
-          dropoff,
-          service,
-          eta,
-          vrm: vrmInput,
-          vehicle,
-          name,
-          phone,
-          email,
-          notes,
-        },
-        null,
-        2
-      )
-    );
+    // Send booking data to backend
+    fetch("/api/booking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        phone,
+        email,
+        carReg: vrmInput,
+        pickup,
+        dropoff,
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+        rolling: "yes",
+        message: `Service: ${service}. Distance: ${eta?.textDistance || 'N/A'}. ${notes}`,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Booking submitted successfully! We'll contact you shortly.");
+          // Reset form or redirect
+          window.location.href = "/";
+        } else {
+          alert("Failed to submit booking: " + (data.error || "Unknown error"));
+        }
+      })
+      .catch((err) => {
+        console.error("Booking error:", err);
+        alert("Failed to submit booking. Please try again or call us directly.");
+      });
   }
 
   return (

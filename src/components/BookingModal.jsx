@@ -28,13 +28,39 @@ export default function BookingModal({ open, onClose }) {
     e.preventDefault();
     setSubmitting(true);
 
-    // TODO: send to your endpoint (email, db, etc.)
-    // Example: await fetch("/api/booking", { method:"POST", body: new FormData(e.currentTarget) })
-    await new Promise((r) => setTimeout(r, 800)); // fake delay
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      carReg: formData.get("carReg"),
+      pickup: formData.get("pickup"),
+      dropoff: formData.get("dropoff"),
+      date: formData.get("date"),
+      time: formData.get("time"),
+      rolling: formData.get("rolling"),
+      message: formData.get("message"),
+    };
 
-    setSubmitting(false);
-    setSent(true);
-    setTimeout(() => onClose?.(), 900);
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to submit booking");
+      }
+
+      setSubmitting(false);
+      setSent(true);
+      setTimeout(() => onClose?.(), 900);
+    } catch (error) {
+      console.error("Booking error:", error);
+      alert("Failed to submit booking. Please try again or call us directly.");
+      setSubmitting(false);
+    }
   }
 
   return (
