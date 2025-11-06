@@ -153,7 +153,7 @@ export default function ServicesGrid() {
                   Request callback
                 </button>
                 <a
-                  href="tel:+440000000000"
+
                   className="inline-flex items-center justify-center rounded-full border border-[#0E172B]/20 px-6 py-2 text-sm font-semibold text-[#0E172B] transition hover:border-[#FACC14] hover:text-[#FACC14]"
                 >
                   Speak with dispatch

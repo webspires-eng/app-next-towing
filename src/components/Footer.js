@@ -47,7 +47,6 @@ export default function Footer() {
         <div>
           <h4 className="foot-title">Contact</h4>
           <ul className="foot-contact">
-            <li><a href="tel:+1000000000" className="foot-link">+1 (000) 000-0000</a></li>
             <li><a href="mailto:help@nexttowing.com" className="foot-link">help@nexttowing.com</a></li>
             <li><span className="muted">Manchester, UK</span></li>
           </ul>

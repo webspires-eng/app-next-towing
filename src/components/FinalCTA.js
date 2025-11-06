@@ -12,7 +12,7 @@ export default function FinalCTA() {
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <a
             className="inline-flex items-center justify-center rounded-full bg-[#FACC14] px-6 py-3 text-sm font-semibold text-black transition hover:bg-[#f9c000]"
-            href="tel:+440000000000"
+
           >
             Call now
           </a>

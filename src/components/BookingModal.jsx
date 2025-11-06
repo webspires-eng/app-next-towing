@@ -135,15 +135,13 @@ export default function BookingModal({ open, onClose }) {
           </label>
 
           <div className="modal-foot">
-            <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
-            <button className="btn" type="submit" disabled={submitting}>
-              {submitting ? "Sending…" : sent ? "Sent!" : "Send Message"}
-            </button>
+              <button type="button" className="btn btn-outline" onClick={onClose}>Cancel</button>
+              <button className="btn" type="submit" disabled={submitting}>
+                {submitting ? "Sending…" : sent ? "Sent!" : "Send Message"}
+              </button>
           </div>
 
-          <p className="muted" style={{marginTop:8, fontSize:12}}>
-            Need urgent help? Call us now: <Link className="link-inline" href="tel:+440000000000">+44 0000 000000</Link>
-          </p>
+
         </form>
       </div>
     </>

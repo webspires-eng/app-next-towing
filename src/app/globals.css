@@ -4,7 +4,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+
 
 /* ========= Theme Variables ========= */
 :root {
@@ -233,6 +233,8 @@ a:hover {
 }
 
 /* CTA button */
+
+/* --- BUTTONS --- */
 .btn {
   display: inline-block;
   padding: 10px 16px;
@@ -242,33 +244,66 @@ a:hover {
   text-decoration: none;
   font-weight: 600;
   line-height: 1;
-  transition: background .2s ease, color .2s ease, transform .05s ease;
+  transition: background .2s, color .2s, transform .05s;
 }
 .btn:hover {
-  background: #fbbf24;
-  color: #111;
+  background: #ffe05a;
+  color: #111111;
 }
-.btn:active { transform: translateY(1px); }
+.btn:active {
+  transform: translateY(1px);
+}
 .btn[disabled] {
   opacity: 0.55;
   pointer-events: none;
 }
-.btn-block { display: block; text-align: center; }
-.btn.btn-sm { padding: 9px 12px; font-size: 14px; }
+.btn-block {
+  display: block;
+  text-align: center;
+}
+.btn-sm {
+  padding: 9px 12px;
+  font-size: 14px;
+}
+
+/* Outline button: white border, transparent bg, white text */
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.86);
+  transition: background .2s, color .2s, border-color .2s;
+}
+.btn-outline:hover {
+  background: rgba(250,204,21,0.15);
+  color: #111;
+  border-color: #facc14;
+}
+
+/* Accent button: brand yellow or red, always black or white text for contrast */
+.btn-accent {
+  background: #facc15;
+  color: #111;
+}
+.btn-accent:hover {
+  filter: brightness(1.05);
+}
+
+/* Red accent (for destructive actions) */
+.btn-accent.red {
+  background: #e14a42;
+  color: #fff;
+}
+.btn-accent.red:hover {
+  filter: brightness(0.96);
+}
 
 /* Ensure links inside yellow/brand buttons always have black text */
 .btn a,
-.btn:is(a),
-[class*="bg-[#FACC"] a,
-[class*="bg-[#facc"] a,
-button[class*="bg-[#FACC"],
-button[class*="bg-[#facc"] {
+.btn:is(a) {
   color: #111111 !important;
 }
 .btn a:hover,
-.btn:is(a):hover,
-[class*="bg-[#FACC"] a:hover,
-[class*="bg-[#facc"] a:hover {
+.btn:is(a):hover {
   color: #111111 !important;
 }
 
@@ -1522,43 +1557,7 @@ textarea.input{ resize: vertical; }
   background-image: url('data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48"><defs><filter id="drop" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="rgba(0,0,0,.35)"/></filter></defs><g filter="url(%23drop)"><path d="M18 2 C26 2 33 9 33 17 C33 28 22 38 18 46 C14 38 3 28 3 17 C3 9 10 2 18 2 Z" fill="%23facc15"/><circle cx="18" cy="17" r="6" fill="%23111111"/></g></svg>');
 }
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
+
 
 .dark {
   --background: oklch(0.145 0 0);
@@ -1594,11 +1593,4 @@ textarea.input{ resize: vertical; }
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
+
