@@ -15,10 +15,41 @@ export async function POST(req) {
       process.env.DVLA_API_URL ||
       "https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles";
 
+    // Optional: allow mock mode for development without hitting DVLA
+    const useMock = (process.env.DVLA_USE_MOCK || "").toLowerCase() === "1" || (process.env.DVLA_USE_MOCK || "").toLowerCase() === "true";
+    if (useMock) {
+      return NextResponse.json({
+        registrationNumber,
+        make: "FORD",
+        model: "TRANSIT CUSTOM",
+        colour: "WHITE",
+        bodyType: "PANEL VAN",
+        fuelType: "HEAVY OIL",
+        year: 2021,
+        taxStatus: "Taxed",
+        motStatus: "Valid",
+        transmission: "Automatic",
+        driveType: "FWD",
+        weightKg: 2600,
+        engineCapacity: 1996,
+      });
+    }
+
+    const apiKey = process.env.DVLA_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          error: "DVLA_API_KEY not configured",
+          hint: "Set DVLA_API_KEY or enable DVLA_USE_MOCK=1 for development. See .env.example.",
+        },
+        { status: 500 }
+      );
+    }
+
     const res = await fetch(url, {
       method: "POST",
       headers: {
-        "x-api-key": process.env.DVLA_API_KEY, // <-- your key
+        "x-api-key": apiKey, // server-side secret
         "Content-Type": "application/json",
         Accept: "application/json",
       },
